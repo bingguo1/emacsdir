@@ -141,7 +141,7 @@
 (require 'org)
 
 
-;;(add-hook 'after-init-hook #'global-flycheck-mode)
+
 
 
 ;;;;;;;;;;;;;;;  ;;;;;;;;;;;;; flx-ido  ;;;;;;;;;;;;;;;  smex  ;;;;;;;;;;;;;
@@ -222,6 +222,9 @@
 (global-set-key (kbd "M-v") 'yank)
 
 
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.C\\'" . c++-mode))
+
 (add-hook 'c++-mode-hook
           (lambda ()
 ;;            (hs-minor-mode t)
@@ -229,13 +232,7 @@
             (define-key c-mode-base-map (kbd "C-p") 'hs-show-all)
             (define-key c-mode-base-map (kbd "C-o") 'hs-hide-all)
             ))
-(add-hook 'c-mode-hook
-          (lambda ()
-;;            (hs-minor-mode t)
-            (define-key c-mode-base-map (kbd "C-a") 'hs-toggle-hiding)
-            (define-key c-mode-base-map (kbd "C-p") 'hs-show-all)
-            (define-key c-mode-base-map (kbd "C-o") 'hs-hide-all)
-            ))
+
 
 
 ;;;; term-raw-map is for term char mode, term-mode-map is for line mode of term
@@ -326,14 +323,19 @@
 
 
 
+(cmake-ide-setup)
+(add-hook 'after-init-hook #'global-flycheck-mode)
+
+
+
+
+
 
 ;;;;;;;;;;;;;;;;;; dashboard
 (require 'dashboard)
 (dashboard-setup-startup-hook)
 
 
-;;;;;;
-;;;(require 'page-break-lines) ;;;;; this is for dashboard
 
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
