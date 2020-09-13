@@ -224,14 +224,14 @@
 
 (add-hook 'c++-mode-hook
           (lambda ()
-            (hs-minor-mode t)
+;;            (hs-minor-mode t)
             (define-key c-mode-base-map (kbd "C-a") 'hs-toggle-hiding)
             (define-key c-mode-base-map (kbd "C-p") 'hs-show-all)
             (define-key c-mode-base-map (kbd "C-o") 'hs-hide-all)
             ))
 (add-hook 'c-mode-hook
           (lambda ()
-            (hs-minor-mode t)
+;;            (hs-minor-mode t)
             (define-key c-mode-base-map (kbd "C-a") 'hs-toggle-hiding)
             (define-key c-mode-base-map (kbd "C-p") 'hs-show-all)
             (define-key c-mode-base-map (kbd "C-o") 'hs-hide-all)
@@ -306,6 +306,24 @@
 	  
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;company 
 (add-hook 'after-init-hook 'global-company-mode)
+;; (setq company-backends
+;;       '((company-dabbrev-code
+;; 	 company-clang
+;; 	 company-gtags
+;;          company-capf
+;; 	 company-keywords
+;;          )
+;;         (company-abbrev company-dabbrev)
+;;         ))
+(defun my-c++mode-company-hook ()
+  ;;  (ycmd-mode t)
+  (setq company-auto-complete t)
+  (setq company-minimum-prefix-length 3)
+  (setq company-backends
+        '((company-dabbrev-code  company-clang company-gtags))))
+
+(add-hook 'c++-mode-hook 'my-c++mode-company-hook)
+
 
 
 
