@@ -1,0 +1,128 @@
+history
+history
+ls
+ls
+history
+history
+ls
+root -b out_calSLV.root 
+ls
+cd ~/physicswork/ndwork/muid/slv
+ls
+root -b out_calSLV.root 
+ls
+cd physicswork/
+ls
+find . -name "*.C"
+cd ndwork/
+find . -name "*.C"
+ls
+cd physicswork/
+ls
+cd ndwork/beamMonitoring/
+ls
+ls
+cd
+cd physicswork/ndwork/
+ls
+cd beamMonitoring/
+ls
+cd physicswork/ndwork/beamMonitoring/
+ls
+ls
+cd physicswork/ndwork/beamMonitoring/
+ls
+ls
+ls
+cdwo
+cd physicswork/ndwork/
+ls
+cd beamMonitoring/
+ls
+ls
+cd physicswork/ndwork/beamMonitoring/
+ls
+ls
+ls
+cd physicswork/
+ls
+ls
+ls
+ls
+cd ..
+ls
+cd .emacs.d/
+ls
+cd physicswork/
+ls
+cd ndwork/smearing/
+ls
+ls
+cd
+cd .emacs.d/
+ls
+cd 
+cd physicswork/ndwork/beamMonitoring/
+ls
+ls
+ls
+ls
+cd
+cd physicswork/ndwork/beamMonitoring/
+ls
+ls *.C
+cd physicswork/ndwork/smearing/data/
+cd ..
+ls
+em calibration.C 
+cd
+ls
+cd
+ls
+ls
+cd physicswork/ndwork/beamMonitoring/
+ls
+cd physicswork/ndwork/beamMonitoring/
+cd ..
+ls
+cd ..
+ls
+cd learn/
+ls
+cd le
+ls
+cd physicswork/ndwork/
+ls
+cd beamMonitoring/
+ls
+ls
+ls
+cd physicswork/ndwork/
+cd
+ls
+ls
+cd
+cd test/
+ls
+cd di
+mkdir dir
+cd dir/
+ls
+touch aaaabb aaaacc aaaadd
+touch aaaaee
+mkdir hello
+touch hello1.txt
+touch hello2.txt
+ls
+touch bbcc
+top
+top
+cd ../..
+cd physicswork/ndwork/beamMonitoring/
+ls
+cd ../..
+cd
+cd .emacs.d/
+ls
+cd elpa/
+ls
