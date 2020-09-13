@@ -190,12 +190,8 @@
   (setq recentf-max-saved-items 100)
   (setq-default recent-save-file "~/.emacs.d/recentf"))
 
-
-
 ;;(use-flx-recentf-smex)
 (use-helm)
-
-
 
 
 

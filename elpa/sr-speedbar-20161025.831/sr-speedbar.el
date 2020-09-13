@@ -269,8 +269,8 @@
 (require 'speedbar)
 (require 'advice)
 (require 'cl-lib)
-(eval-when-compile
-  (require 'cl))
+;(eval-when-compile
+;  (require 'cl))
 
 ;;; Code:
 
