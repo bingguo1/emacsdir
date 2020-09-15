@@ -324,9 +324,13 @@
 
 
 (cmake-ide-setup)
+(global-set-key (kbd "C-c m") 'cmake-ide-compile)
+
+
 (add-hook 'after-init-hook #'global-flycheck-mode)
-
-
+(global-set-key (kbd "C-c l") 'flycheck-list-errors)
+(global-set-key (kbd "C-c <up>") 'flycheck-previous-error)
+(global-set-key (kbd "C-c <down>") 'flycheck-next-error)
 
 
 
