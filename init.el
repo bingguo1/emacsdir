@@ -317,16 +317,27 @@
   (setq company-auto-complete t)
   (setq company-minimum-prefix-length 3)
   (setq company-backends
-        '((company-dabbrev-code  company-clang company-gtags))))
-
+        '((company-irony
+;	   company-dabbrev-code
+;	   company-clang
+;	   company-gtags
+	   ))))
 (add-hook 'c++-mode-hook 'my-c++mode-company-hook)
 
+(add-hook 'c++-mode-hook 'irony-mode)
+(add-hook 'c-mode-hook 'irony-mode)
+(add-hook 'objc-mode-hook 'irony-mode)
+(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
 
+;;(add-to-list 'company-backends 'company-irony-c-headers)
+
+
+;;;;;;;cmake-ide
 (cmake-ide-setup)
 (global-set-key (kbd "C-c m") 'cmake-ide-compile)
 
-
+;;;;;; flycheck
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (global-set-key (kbd "C-c l") 'flycheck-list-errors)
 (global-set-key (kbd "C-c <up>") 'flycheck-previous-error)
