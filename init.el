@@ -300,6 +300,9 @@
    (speedbar-toggle-line-expansion))
 (global-set-key (kbd "H-1") 'sb-toggle-expansion-curren-file)
 
+
+;;;;;;;;;;
+(global-set-key (kbd "S-<mouse-1>") 'ggtags-find-tag-mouse)
 	  
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;company 
 (add-hook 'after-init-hook 'global-company-mode)
@@ -318,6 +321,7 @@
   (setq company-minimum-prefix-length 3)
   (setq company-backends
         '((company-irony
+;	   company-etags
 ;	   company-dabbrev-code
 ;	   company-clang
 ;	   company-gtags
