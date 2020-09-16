@@ -2,6 +2,10 @@
 
 (require 'package)
 
+;;;;;when double clicking with mouse, normally i want to select a long word which contain underscore and dot, to do this, the definition of word has to be changed.
+(modify-syntax-entry ?_ "w" (standard-syntax-table))
+(modify-syntax-entry ?. "w" (standard-syntax-table))
+(modify-syntax-entry ?/ "w" (standard-syntax-table))
 ;; If you want to use latest version
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 ;; If you want to use last tagged version
