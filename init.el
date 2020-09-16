@@ -15,6 +15,17 @@
 
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 
+(defun delete-line ()
+ "Delete text from current position to end of line char.
+This command does not push text to `kill-ring'."
+  (interactive)
+  (delete-region
+   (point)
+   (progn (end-of-line 1) (point)))
+  (delete-char 1))
+(global-set-key  (kbd "C-k") 'delete-line)
+
+
 
 (unless window-system
   (require 'mouse) ;; needed for iterm2 compatibility
@@ -304,7 +315,14 @@
 (global-set-key (kbd "C-1") 'sb-toggle-expansion-curren-file)
 (global-set-key (kbd "C-<tab>") 'sr-speedbar-toggle)
 
-;;;;;;;;;;
+
+;;;;;;;;;;; yas
+(require 'yasnippet)
+(yas-reload-all)
+(add-hook 'c++-mode-hook #'yas-minor-mode)
+
+
+;;;;;;;;;;ggtags
 (global-set-key (kbd "S-<mouse-1>") 'ggtags-find-tag-mouse)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;company 
@@ -324,14 +342,18 @@
   (setq company-minimum-prefix-length 3)
   (setq company-backends
         '((
-;	   company-irony
+	   company-irony
 ;	   company-etags
 ;	   company-dabbrev-code
 ;	   company-clang
-	   company-gtags
+;	   company-gtags
+	   company-files
+;	   company-capf
 	   ))))
+(global-set-key (kbd "C-c f") 'company-files)
 (add-hook 'c++-mode-hook 'my-c++mode-company-hook)
 
+;;;;;irony
 (add-hook 'c++-mode-hook 'irony-mode)
 (add-hook 'c-mode-hook 'irony-mode)
 (add-hook 'objc-mode-hook 'irony-mode)
