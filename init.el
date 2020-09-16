@@ -279,16 +279,19 @@
   (let ((map (if (boundp 'input-decode-map)
                  input-decode-map
                function-key-map)))
-    (define-key map "\e[1;P1"  (kbd "H-1"))
-    (define-key map "\e[1;PT"  (kbd "H-<tab>"))
+    (define-key map "\e[1;P1"  (kbd "C-1"))
+    (define-key map "\e[1;PT"  (kbd "C-<tab>"))
+    (define-key map "\e[1;SU"  (kbd "s-u"))
     ))
+
+(global-set-key (kbd "s-u") 'revert-buffer)
 
 (require 'sr-speedbar)
 ;;(custom-set-variables '(sr-speedbar-right-side nil) '(sr-speedbar-skip-other-window-p t) '(sr-speedbar-max-width 20) '(sr-speedbar-width-x 10))
 (custom-set-variables '(sr-speedbar-auto-refresh t))
 (setq speedbar-tag-hierarchy-method nil)
 (eval-after-load "speedbar" '(speedbar-add-supported-extension ".txt"))
-(global-set-key (kbd "H-<tab>") 'sr-speedbar-toggle)
+
 (global-set-key (kbd "C-f") 'sr-speedbar-refresh-toggle)
  (defun sb-toggle-expansion-curren-file ()
    "Expand current file in speedbar buffer"  
@@ -298,12 +301,12 @@
 ;;   (switch-to-buffer-other-frame "*SPEEDBAR*")  ;;; this link will split the other buffer to two 
    (speedbar-find-selected-file current-file)
    (speedbar-toggle-line-expansion))
-(global-set-key (kbd "H-1") 'sb-toggle-expansion-curren-file)
-
+(global-set-key (kbd "C-1") 'sb-toggle-expansion-curren-file)
+(global-set-key (kbd "C-<tab>") 'sr-speedbar-toggle)
 
 ;;;;;;;;;;
 (global-set-key (kbd "S-<mouse-1>") 'ggtags-find-tag-mouse)
-	  
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;company 
 (add-hook 'after-init-hook 'global-company-mode)
 ;; (setq company-backends
@@ -320,11 +323,12 @@
   (setq company-auto-complete t)
   (setq company-minimum-prefix-length 3)
   (setq company-backends
-        '((company-irony
+        '((
+;	   company-irony
 ;	   company-etags
 ;	   company-dabbrev-code
 ;	   company-clang
-;	   company-gtags
+	   company-gtags
 	   ))))
 (add-hook 'c++-mode-hook 'my-c++mode-company-hook)
 
