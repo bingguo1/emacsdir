@@ -7,7 +7,8 @@
 (modify-syntax-entry ?. "w" (standard-syntax-table))
 (modify-syntax-entry ?/ "w" (standard-syntax-table))
 
-(global-linum-mode t)
+(add-hook 'prog-mode-hook 'linum-mode)
+
 
 ;; If you want to use latest version
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
