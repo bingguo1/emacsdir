@@ -6,6 +6,9 @@
 (modify-syntax-entry ?_ "w" (standard-syntax-table))
 (modify-syntax-entry ?. "w" (standard-syntax-table))
 (modify-syntax-entry ?/ "w" (standard-syntax-table))
+
+(global-linum-mode t)
+
 ;; If you want to use latest version
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 ;; If you want to use last tagged version
@@ -26,7 +29,8 @@ This command does not push text to `kill-ring'."
   (delete-region
    (point)
    (progn (end-of-line 1) (point)))
-  (delete-char 1))
+;  (delete-char 1)
+  )
 (global-set-key  (kbd "C-k") 'delete-line)
 
 
@@ -331,6 +335,7 @@ This command does not push text to `kill-ring'."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;company 
 (add-hook 'after-init-hook 'global-company-mode)
+(setq company-idle-delay 0)
 ;; (setq company-backends
 ;;       '((company-dabbrev-code
 ;; 	 company-clang
