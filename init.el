@@ -9,12 +9,14 @@
 
 (add-hook 'prog-mode-hook 'linum-mode)
 
-
+(global-set-key (kbd "C-x r") 'find-file-read-only)
 ;; If you want to use latest version
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 ;; If you want to use last tagged version
 (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
 (package-initialize)
+
+
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -23,15 +25,29 @@
 
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 
-(defun delete-line ()
- "Delete text from current position to end of line char.
-This command does not push text to `kill-ring'."
-  (interactive)
-  (delete-region
-   (point)
-   (progn (end-of-line 1) (point)))
-;  (delete-char 1)
-  )
+
+(defun delete-line (&optional arg)
+  "Delete text from current position to end of line char.  This command does not push text to `kill-ring'.  with or without ARG"
+  (interactive "P")
+  (delete-region (point)
+   (progn
+     (if arg
+         (forward-visible-line (prefix-numeric-value arg))
+       (if (eobp)
+           (signal 'end-of-buffer nil))
+       (let ((end
+              (save-excursion
+                (end-of-visible-line) (point))))
+         (if (or (save-excursion
+                   ;; If trailing whitespace is visible,
+                   ;; don't treat it as nothing.
+                   (unless show-trailing-whitespace
+                     (skip-chars-forward " \t" end))
+                   (= (point) end))
+                 (and kill-whole-line (bolp)))
+             (forward-visible-line 1)
+           (goto-char end))))
+     (point))))
 (global-set-key  (kbd "C-k") 'delete-line)
 
 
@@ -93,7 +109,8 @@ This command does not push text to `kill-ring'."
 (global-set-key (kbd "C-<down>") 'awesome-tab-forward-group)
 (global-set-key (kbd "C-<up>") 'awesome-tab-backward-group)
 (global-set-key (kbd "C-q") 'kill-this-buffer)
-
+(global-set-key (kbd "C-S-<left>") 'awesome-tab-move-current-tab-to-left)
+(global-set-key (kbd "C-S-<right>") 'awesome-tab-move-current-tab-to-right)
 
 
 
@@ -137,7 +154,9 @@ This command does not push text to `kill-ring'."
       (lambda ()
         (define-key comint-mode-map (kbd "<up>") 'comint-previous-input)
         (define-key comint-mode-map (kbd "<down>") 'comint-next-input)
-        (define-key comint-mode-map (kbd "C-u") 'kill-whole-line)	
+        (define-key comint-mode-map (kbd "C-u") 'kill-whole-line)
+	(define-key comint-mode-map (kbd "C-<up>") nil)
+        (define-key comint-mode-map (kbd "C-<down>") nil)
 	))
 
 (defun discard-command ()
@@ -394,3 +413,38 @@ This command does not push text to `kill-ring'."
 
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
+
+
+
+(setq gdb-many-windows t)
+(eval-after-load 'gdb-mi
+  '(defun gdb-setup-windows ()
+  "Layout the window pattern for option `gdb-many-windows'."
+  (gdb-get-buffer-create 'gdb-breakpoints-buffer)
+  (set-window-dedicated-p (selected-window) nil)
+  (switch-to-buffer gud-comint-buffer)
+   (delete-other-windows)
+   (let ((win0 (selected-window))
+        (win1 (split-window nil (* ( / (window-height) 3) 2)))
+        (win2 (split-window-right)))
+      (select-window win2)
+      (set-window-buffer
+       win2
+       (if gud-last-last-frame
+           (gud-find-file (car gud-last-last-frame))
+	 (if gdb-main-file
+             (gud-find-file gdb-main-file)
+           ;; Put buffer list in window if we
+           ;; can't find a source file.
+           (list-buffers-noselect))))
+      (setq gdb-source-window (selected-window))
+      (select-window win1)
+      (gdb-set-window-buffer
+       (gdb-get-buffer-create 'gdb-inferior-io) nil win1)
+      (let ((win3 (split-window-right)))
+	(gdb-set-window-buffer (if gdb-show-threads-by-default
+                                   (gdb-threads-buffer-name)
+				 (gdb-breakpoints-buffer-name))
+			       nil win3))
+      (select-window win0))))
+
