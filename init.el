@@ -52,11 +52,17 @@
 
 
 
+
+
 (unless window-system
   (require 'mouse) ;; needed for iterm2 compatibility
+  (setq mouse-sel-mode t)
+  (setq x-select-enable-clipboard t)
+  ;;  (setq x-select-enable-primary nil)
+  ;;  (setq mouse-drag-copy-region nil)
   (xterm-mouse-mode t)
   (if (eq system-type 'darwin)
-      (progn
+       (progn
 	 (global-set-key [mouse-4] '(lambda ()
 				      (interactive)
 				      (scroll-down 1)))
@@ -65,10 +71,7 @@
 				      (scroll-up 1)))
          ))
 
-  (setq mouse-sel-mode t)
-  (setq x-select-enable-clipboard t)
-;;  (setq x-select-enable-primary nil)
-;;  (setq mouse-drag-copy-region nil)			 
+ 			 
 
   (defun track-mouse (e)))
 
@@ -76,6 +79,9 @@
 
 (require 'awesome-tab)
 (awesome-tab-mode t)
+(when window-system
+  (setq awesome-tab-active-bar-height 9)
+  (setq awesome-tab-height 100))
 (defun my-tabbar-buffer-groups ()
   (list
    (cond
@@ -114,7 +120,12 @@
 
 
 
-(menu-bar-mode -1)
+(unless window-system (menu-bar-mode -1))
+(when window-system
+  (set-face-attribute 'default nil :font "Monaco-10" )
+;  (setq-default line-spacing 0.1)
+  )
+(toggle-scroll-bar -1)
 ;;(ac-config-default)
 (setq compilation-skip-threshold 2)
 (setq-default c-basic-offset 4)
@@ -411,6 +422,21 @@
 
 
 
+;;;;;;;;;;;latex latex auctex ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
+;; (setenv "PATH" (concat "/Library/TeX/texbin:""/usr/local/opt:"
+;;                      (getenv "PATH")))
+;; (add-to-list 'exec-path "/Library/TeX/texbin")
+;; (add-to-list 'exec-path "/usr/local/opt")
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+;;(setq-default TeX-master nil) ;; enable only when working with multiple file system
+(setq TeX-PDF-mode t)
+(latex-preview-pane-enable)
+(setq doc-view-continuous t) ;;;; so the pdf on my preview-pane can scroll continuously
+
+
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
@@ -447,4 +473,6 @@
 				 (gdb-breakpoints-buffer-name))
 			       nil win3))
       (select-window win0))))
+
+
 
