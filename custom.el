@@ -50,9 +50,29 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- 
  '(package-selected-packages
-   '(company tabbar sr-speedbar spacemacs-theme simpleclip sane-term powerline panda-theme origami neotree minimap markdown-preview-eww markdown-mode+ latex-preview-pane helm flycheck flx-ido elfeed edit-indirect dracula-theme dashboard ctags-update counsel blackboard-theme auto-complete auctex))
+   '(shell-pop multiple-cursors exec-path-from-shell which-key smartparens yasnippet-snippets flycheck-irony ggtags company-irony irony yasnippet rtags cmake-ide company tabbar sr-speedbar spacemacs-theme simpleclip sane-term powerline panda-theme origami neotree minimap markdown-preview-eww markdown-mode+ latex-preview-pane helm flycheck flx-ido elfeed edit-indirect dracula-theme dashboard ctags-update counsel blackboard-theme auto-complete auctex))
+
+
+
+ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; shell pop  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; '(shell-pop-default-directory "/Users/kyagi/git")
+ '(shell-pop-shell-type (quote ("ansi-term" "*ansi*" (lambda nil (ansi-term shell-pop-term-shell)))))
+ '(shell-pop-term-shell "/bin/bash")
+ '(shell-pop-universal-key "C-a")
+;; '(shell-pop-window-size 30)
+ '(shell-pop-full-span t)
+ '(shell-pop-window-position "bottom")
+ '(shell-pop-autocd-to-working-dir t)
+ '(shell-pop-restore-window-configuration t)
+ '(shell-pop-cleanup-buffer-at-process-exit t)
+ 
+
+
+
+
+
+ 
  '(sr-speedbar-auto-refresh t))
 ;;; '(term-char-mode-buffer-read-only nil))
 

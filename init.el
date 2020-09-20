@@ -278,7 +278,7 @@
 (add-hook 'c++-mode-hook
           (lambda ()
 ;;            (hs-minor-mode t)
-            (define-key c-mode-base-map (kbd "C-a") 'hs-toggle-hiding)
+            (define-key c-mode-base-map (kbd "C-w") 'hs-toggle-hiding)
             (define-key c-mode-base-map (kbd "C-p") 'hs-show-all)
             (define-key c-mode-base-map (kbd "C-o") 'hs-hide-all)
             ))
@@ -366,12 +366,13 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;company 
 (add-hook 'after-init-hook 'global-company-mode)
-;; (with-eval-after-load 'company
-;;   (defun company--my-insert-spc() (interactive) (company-abort)(insert-char #10r32))
+(with-eval-after-load 'company
+  (defun company--my-insert-spc() (interactive) (company-abort)(insert-char #10r32))
 ;;   (defun company--my-insert-dot() (interactive) (company-abort)(insert-char #10r46))
-;;   (define-key company-active-map (kbd "ESC") 'company-abort)
-;;   (define-key company-active-map (kbd "SPC") 'company--my-insert-spc)
-;;   (define-key company-active-map (kbd ".") 'company--my-insert-dot))
+   (define-key company-active-map (kbd "q") 'company-abort)
+   (define-key company-active-map (kbd "SPC") 'company--my-insert-spc)
+   ;;   (define-key company-active-map (kbd ".") 'company--my-insert-dot)
+   )
 (setq company-idle-delay 0)
 ;;(setq company-minimum-prefix-length 3)
 ;;(setq company-auto-complete t)
@@ -484,4 +485,12 @@
       (select-window win0))))
 
 
+(setq
+   backup-by-copying t      ; don't clobber symlinks
+   backup-directory-alist
+    '(("." . "~/.saves/"))    ; don't litter my fs tree
+   delete-old-versions t
+   kept-new-versions 2
+   kept-old-versions 1
+   version-control t)       ; use versioned backups
 
