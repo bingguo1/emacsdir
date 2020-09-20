@@ -366,7 +366,16 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;company 
 (add-hook 'after-init-hook 'global-company-mode)
+;; (with-eval-after-load 'company
+;;   (defun company--my-insert-spc() (interactive) (company-abort)(insert-char #10r32))
+;;   (defun company--my-insert-dot() (interactive) (company-abort)(insert-char #10r46))
+;;   (define-key company-active-map (kbd "ESC") 'company-abort)
+;;   (define-key company-active-map (kbd "SPC") 'company--my-insert-spc)
+;;   (define-key company-active-map (kbd ".") 'company--my-insert-dot))
 (setq company-idle-delay 0)
+;;(setq company-minimum-prefix-length 3)
+;;(setq company-auto-complete t)
+;;(setq company-show-numbers t)
 ;; (setq company-backends
 ;;       '((company-dabbrev-code
 ;; 	 company-clang
