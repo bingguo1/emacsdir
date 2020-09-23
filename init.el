@@ -2,6 +2,11 @@
 
 (require 'package)
 
+;; (define-prefix-command 'ccm-map)
+;; (global-set-key (kbd "C-c m") 'ccm-map)
+;; (define-prefix-command 'ccc-map)
+;; (global-set-key (kbd "C-c c") 'ccm-map)
+
 ;;;;;when double clicking with mouse, normally i want to select a long word which contain underscore and dot, to do this, the definition of word has to be changed.
 (modify-syntax-entry ?_ "w" (standard-syntax-table))
 (modify-syntax-entry ?. "w" (standard-syntax-table))
@@ -117,7 +122,8 @@
 (global-set-key (kbd "C-q") 'kill-this-buffer)
 (global-set-key (kbd "C-S-<left>") 'awesome-tab-move-current-tab-to-left)
 (global-set-key (kbd "C-S-<right>") 'awesome-tab-move-current-tab-to-right)
-
+;;(global-set-key [triple-wheel-left] 'awesome-tab-backward-tab)  ;;; in macbook pro, two fingers left/ right is this, too fast, not going to use
+;;(global-set-key [triple-wheel-right] 'awesome-tab-forward-tab)
 
 
 (unless window-system (menu-bar-mode -1))
@@ -185,10 +191,10 @@
             ))
 
 
-(global-set-key (kbd "C-c l") 'org-store-link)
-(global-set-key (kbd "C-c a") 'org-agenda)
-(global-set-key (kbd "C-c c") 'org-capture)
-(require 'org)
+;(global-set-key (kbd "C-c l") 'org-store-link)
+;(global-set-key (kbd "C-c a") 'org-agenda)
+;(global-set-key (kbd "C-c c") 'org-capture)
+;(require 'org)
 
 
 
@@ -413,9 +419,10 @@
 ;;(add-to-list 'company-backends 'company-irony-c-headers)
 
 
+
 ;;;;;;;cmake-ide
 (cmake-ide-setup)
-(global-set-key (kbd "C-c m") 'cmake-ide-compile)
+;;(global-set-key (kbd "C-c c c") 'cmake-ide-compile)
 
 ;;;;;; flycheck
 (add-hook 'after-init-hook #'global-flycheck-mode)
@@ -432,25 +439,64 @@
 
 
 
-;;;;;;;;;;;latex latex auctex ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;latex latex auctex ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
+
+(defun LaTeX-save-and-compile (arg)
+  "Once you click save, it will run tex command run all."  
+  (interactive "P")
+  (save-buffer)
+  (TeX-command-run-all arg)
+  )
+
 ;; (setenv "PATH" (concat "/Library/TeX/texbin:""/usr/local/opt:"
 ;;                      (getenv "PATH")))
 ;; (add-to-list 'exec-path "/Library/TeX/texbin")
 ;; (add-to-list 'exec-path "/usr/local/opt")
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-;;(setq-default TeX-master nil) ;; enable only when working with multiple file system
-(setq TeX-PDF-mode t)
-(latex-preview-pane-enable)
-(setq doc-view-continuous t) ;;;; so the pdf on my preview-pane can scroll continuously
+(add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
+(add-hook 'LaTeX-mode-hook
+	  (lambda ()
+	    
+	    (setq TeX-auto-save t)
+	    (setq TeX-parse-self t)
+	    ;;(setq-default TeX-master nil) ;; enable only when working with multiple file system
+	    (setq TeX-PDF-mode t)
+	    (latex-preview-pane-enable)
+	    (setq doc-view-continuous t) ;;;; so the pdf on my preview-pane can scroll continuously	    
+	    ;;(pdf-tools-install)
+	    (pdf-loader-install)
+	    (setq TeX-view-program-selection '((output-pdf "pdf-tools"))
+		  TeX-source-correlate-start-server t)
+	    (setq TeX-view-program-list '(("pdf-tools" "TeX-pdf-tools-sync-view")))
+	    ;;;;;;;; when you are pressing mouse, it's down-mouse, when finish it, it's mouse-1, so down-mouse work before mouse
+	    (define-key LaTeX-mode-map (kbd "C-<mouse-1>") 'pdf-sync-forward-search)
+	    (define-key LaTeX-mode-map (kbd "C-<down-mouse-1>") 'mouse-set-point)
+	    (define-key LaTeX-mode-map (kbd "C-x C-s") 'LaTeX-save-and-compile)
+	    (set (make-variable-buffer-local 'TeX-electric-math)
+		 (cons "$" "$"))
+
+	    (add-to-list 'TeX-command-list
+			 '("latexmk" "latexmk -pdflatex='pdflatex -file-line-error -synctex=1' -pdf %s"
+			   TeX-run-command nil t :help "Run latexmk") t)
+	    (LaTeX-math-mode)
+	    (setq LaTeX-electric-left-right-brace t)
+	    (setq LaTeX-command-style  '(("" "%(PDF)%(latex) -shell-escape --synctex=1 %(file-line-error) %(extraopts) %S%(PDFout)")))
+	    (setq TeX-source-correlate-method 'synctex)
+	    (setq TeX-source-correlate-mode t)
+	    (setq TeX-source-correlate-start-server t)	    	    
+))
+(add-hook 'LaTeX-mode-hook 'turn-on-cdlatex)
 
 
-(setq custom-file "~/.emacs.d/custom.el")
-(load custom-file)
 
 
+
+
+;(setq custom-file "~/.emacs.d/custom.el")
+;(load custom-file)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; gdb  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq gdb-many-windows t)
 (eval-after-load 'gdb-mi
@@ -494,3 +540,146 @@
    kept-old-versions 1
    version-control t)       ; use versioned backups
 
+
+
+(global-set-key (kbd "C-c m c") 'mc/edit-lines)
+
+
+(defun xah-open-file-at-cursor ()
+  "Open the file path under cursor.
+If there is text selection, uses the text selection for path.
+If the path starts with “http://”, open the URL in browser.
+Input path can be {relative, full path, URL}.
+Path may have a trailing “:‹n›” that indicates line number. If so, jump to that line number.
+If path does not have a file extension, automatically try with “.el” for elisp files.
+This command is similar to `find-file-at-point' but without prompting for confirmation.
+
+URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'
+Version 2019-01-16"
+  (interactive)
+  (let* (($inputStr (if (use-region-p)
+                        (buffer-substring-no-properties (region-beginning) (region-end))
+                      (let ($p0 $p1 $p2
+                                ;; chars that are likely to be delimiters of file path or url, e.g. whitespace, comma. The colon is a problem. cuz it's in url, but not in file name. Don't want to use just space as delimiter because path or url are often in brackets or quotes as in markdown or html
+                                ($pathStops "^  \t\n\"`'‘’“”|[]{}「」<>〔〕〈〉《》【】〖〗«»‹›❮❯❬❭〘〙·。\\"))
+                        (setq $p0 (point))
+                        (skip-chars-backward $pathStops)
+                        (setq $p1 (point))
+                        (goto-char $p0)
+                        (skip-chars-forward $pathStops)
+                        (setq $p2 (point))
+                        (goto-char $p0)
+                        (buffer-substring-no-properties $p1 $p2))))
+         ($path
+          (replace-regexp-in-string
+           "^file:///" "/"
+           (replace-regexp-in-string
+            ":\\'" "" $inputStr))))
+    (if (string-match-p "\\`https?://" $path)
+        (if (fboundp 'xahsite-url-to-filepath)
+            (let (($x (xahsite-url-to-filepath $path)))
+              (if (string-match "^http" $x )
+                  (browse-url $x)
+		(message "not url, so find-file")
+                (find-file $x)))
+          (progn (browse-url $path)))
+      (if ; not starting “http://”
+          (string-match "^\\`\\(.+?\\):\\([0-9]+\\)\\'" $path)
+          (let (
+                ($fpath (match-string 1 $path))
+                ($line-num (string-to-number (match-string 2 $path))))
+            (if (file-exists-p $fpath)
+                (progn
+;		  (message "im here now")
+                  (find-file $fpath)
+                  (goto-char 1)
+                  (forward-line (1- $line-num)))
+              (when (y-or-n-p (format "file no exist: 「%s」. Create?" $fpath))
+                (find-file $fpath))))
+        (if (file-exists-p $path)
+            (progn ; open f.ts instead of f.js
+;	      (message "im down here")
+              (let (($ext (file-name-extension $path))
+                    ($fnamecore (file-name-sans-extension $path)))
+;		(message $ext)
+;		(message $fnamecore)
+                (if (and (string-equal $ext "js")
+                         (file-exists-p (concat $fnamecore ".ts")))
+                    (find-file (concat $fnamecore ".ts"))
+                  (find-file $path))
+;		(message $path)
+		))
+          (if (file-exists-p (concat $path ".el"))
+              (find-file (concat $path ".el"))
+            (when (y-or-n-p (format "file no exist: 「%s」. Create?" $path))
+              (find-file $path ))))))))
+
+
+(global-set-key (kbd "s-<down-mouse-1>") 'mouse-set-point)
+(global-set-key (kbd "s-<mouse-1>") 'xah-open-file-at-cursor)
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+;(add-to-list 'load-path "~/.emacs.d/themes/")
+;(require 'moe-theme)
+
+(powerline-default-theme)
+(load-theme 'monokai t)
+
+;;;;;;;;; ESHELL prompt
+(defun with-face (str &rest face-plist)
+  (propertize str 'face face-plist))
+
+(defun shk-eshell-prompt ()
+  (let ((header-bg "#fff"))
+    (concat
+     (with-face (format-time-string "(%Y-%m-%d %H:%M)" (current-time)) :foreground "#ff8000")
+     (with-face (concat (eshell/pwd) "") :foreground "#00b3b3")
+     "$ ")))
+(setq eshell-prompt-function 'shk-eshell-prompt)
+(setq eshell-highlight-prompt nil)
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+
+
+ '(package-selected-packages
+   '(cdlatex pdf-tools shell-pop multiple-cursors exec-path-from-shell which-key smartparens yasnippet-snippets flycheck-irony ggtags company-irony irony yasnippet rtags cmake-ide company tabbar sr-speedbar spacemacs-theme simpleclip sane-term powerline panda-theme origami neotree minimap markdown-preview-eww markdown-mode+ latex-preview-pane helm flycheck flx-ido elfeed edit-indirect dracula-theme dashboard ctags-update counsel blackboard-theme auto-complete auctex))
+
+ 
+ '(shell-pop-autocd-to-working-dir t)
+ '(shell-pop-cleanup-buffer-at-process-exit t)
+ '(shell-pop-full-span t)
+ '(shell-pop-restore-window-configuration t)
+ '(shell-pop-shell-type
+   '("ansi-term" "*ansi*"
+     (lambda nil
+       (ansi-term shell-pop-term-shell))))
+ '(shell-pop-term-shell "/bin/bash")
+ '(shell-pop-universal-key "C-a")
+ '(shell-pop-window-position "bottom")
+ '(sr-speedbar-auto-refresh t))
+;;; '(term-char-mode-buffer-read-only nil))
+
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(comint-highlight-prompt ((t (:foreground "magenta"))))
+ '(isearch ((t (:inherit region :background "brightyellow" :foreground "#1B1E1C"))))
+ '(lazy-highlight ((t (:inherit highlight :background "#FF99999")))))
