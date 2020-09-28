@@ -191,13 +191,32 @@
             ))
 
 
-;(global-set-key (kbd "C-c l") 'org-store-link)
-;(global-set-key (kbd "C-c a") 'org-agenda)
-;(global-set-key (kbd "C-c c") 'org-capture)
-;(require 'org)
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; org ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(require 'org-tempo) ;;;; enable the old way to create a block by < + key + <tab>
+(global-set-key (kbd "C-c o l") 'org-store-link)
+(global-set-key (kbd "C-c o a") 'org-agenda)
+(global-set-key (kbd "C-c o c") 'org-capture)
+(setq org-image-actual-width nil)
+
+(require 'org-download)
+;; Drag-and-drop to `dired`
+(add-hook 'dired-mode-hook 'org-download-enable)
+(with-eval-after-load 'org
+    (org-download-enable))
+
+(setq org-default-notes-file "~/doc_emacs/orgs/tasks.org")
+(setq org-agenda-files '("~/doc_emacs/orgs/agenda/"))
+
+(require 'ox-latex)
+(add-to-list 'org-latex-classes
+             '("beamer"
+               "\\documentclass\[presentation\]\{beamer\}"
+               ("\\section\{%s\}" . "\\section*\{%s\}")
+               ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
+               ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
 
 
 ;;;;;;;;;;;;;;;  ;;;;;;;;;;;;; flx-ido  ;;;;;;;;;;;;;;;  smex  ;;;;;;;;;;;;;
@@ -287,6 +306,7 @@
             (define-key c-mode-base-map (kbd "C-w") 'hs-toggle-hiding)
             (define-key c-mode-base-map (kbd "C-p") 'hs-show-all)
             (define-key c-mode-base-map (kbd "C-o") 'hs-hide-all)
+	    (define-key c-mode-base-map (kbd "S-<mouse-1>") 'ggtags-find-tag-mouse)
             ))
 
 
@@ -344,7 +364,29 @@
 
 (require 'sr-speedbar)
 ;;(custom-set-variables '(sr-speedbar-right-side nil) '(sr-speedbar-skip-other-window-p t) '(sr-speedbar-max-width 20) '(sr-speedbar-width-x 10))
-(custom-set-variables '(sr-speedbar-auto-refresh t))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(mouse-drag-and-drop-region 'modifier)
+ '(mouse-drag-and-drop-region-cut-when-buffers-differ t)
+ '(org-download-image-org-width 300)
+ '(org-download-screenshot-method "screencapture -i %s")
+ '(package-selected-packages
+   '(latex-math-preview org-download cdlatex pdf-tools shell-pop multiple-cursors exec-path-from-shell which-key smartparens yasnippet-snippets flycheck-irony ggtags company-irony irony yasnippet rtags cmake-ide company tabbar sr-speedbar spacemacs-theme simpleclip sane-term powerline panda-theme origami neotree minimap markdown-preview-eww markdown-mode+ latex-preview-pane helm flycheck flx-ido elfeed edit-indirect dracula-theme dashboard ctags-update counsel blackboard-theme auto-complete auctex))
+ '(shell-pop-autocd-to-working-dir t)
+ '(shell-pop-cleanup-buffer-at-process-exit t)
+ '(shell-pop-full-span t)
+ '(shell-pop-restore-window-configuration t)
+ '(shell-pop-shell-type
+   '("ansi-term" "*ansi*"
+     (lambda nil
+       (ansi-term shell-pop-term-shell))))
+ '(shell-pop-term-shell "/bin/bash")
+ '(shell-pop-universal-key "C-a")
+ '(shell-pop-window-position "bottom")
+ '(sr-speedbar-auto-refresh t))
 (setq speedbar-tag-hierarchy-method nil)
 (eval-after-load "speedbar" '(speedbar-add-supported-extension ".txt"))
 
@@ -367,8 +409,7 @@
 (add-hook 'c++-mode-hook #'yas-minor-mode)
 
 
-;;;;;;;;;;ggtags
-(global-set-key (kbd "S-<mouse-1>") 'ggtags-find-tag-mouse)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;company 
 (add-hook 'after-init-hook 'global-company-mode)
@@ -425,12 +466,11 @@
 ;;(global-set-key (kbd "C-c c c") 'cmake-ide-compile)
 
 ;;;;;; flycheck
+(setq flycheck-global-modes '(not org-mode))
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (global-set-key (kbd "C-c l") 'flycheck-list-errors)
 (global-set-key (kbd "C-c <up>") 'flycheck-previous-error)
 (global-set-key (kbd "C-c <down>") 'flycheck-next-error)
-
-
 
 
 ;;;;;;;;;;;;;;;;;; dashboard
@@ -454,10 +494,14 @@
 ;;                      (getenv "PATH")))
 ;; (add-to-list 'exec-path "/Library/TeX/texbin")
 ;; (add-to-list 'exec-path "/usr/local/opt")
+;;(setq-default TeX-master nil)
 (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
 (add-hook 'LaTeX-mode-hook
 	  (lambda ()
-	    
+
+	    (setq company-minimum-prefix-length 4)
+	    (flyspell-mode)
+
 	    (setq TeX-auto-save t)
 	    (setq TeX-parse-self t)
 	    ;;(setq-default TeX-master nil) ;; enable only when working with multiple file system
@@ -488,7 +532,12 @@
 ))
 (add-hook 'LaTeX-mode-hook 'turn-on-cdlatex)
 
-
+;;;;;;;;;;;;;;;;;;;;;;; latex-math-preview
+(autoload 'latex-math-preview-expression "latex-math-preview" nil t)
+(autoload 'latex-math-preview-insert-symbol "latex-math-preview" nil t)
+(autoload 'latex-math-preview-save-image-file "latex-math-preview" nil t)
+(autoload 'latex-math-preview-beamer-frame "latex-math-preview" nil t)
+(setq latex-math-preview-image-foreground-color "#ccffcc")
 
 
 
@@ -615,10 +664,9 @@ Version 2019-01-16"
               (find-file $path ))))))))
 
 
-(global-set-key (kbd "s-<down-mouse-1>") 'mouse-set-point)
-(global-set-key (kbd "s-<mouse-1>") 'xah-open-file-at-cursor)
-
-
+;;;;;;;;;;;;option + mouse cannot be defined in terminal emacs, cmd+mouse is intercepted by iterm2, ctrl + mouse is predefined in window emacs, so only left S+mouse choice
+(global-set-key (kbd "S-<down-mouse-1>")  'mouse-set-point)
+(global-set-key (kbd "S-<mouse-1>")  'xah-open-file-at-cursor)
 
 
 
@@ -649,29 +697,7 @@ Version 2019-01-16"
 (setq eshell-prompt-function 'shk-eshell-prompt)
 (setq eshell-highlight-prompt nil)
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
 
-
- '(package-selected-packages
-   '(cdlatex pdf-tools shell-pop multiple-cursors exec-path-from-shell which-key smartparens yasnippet-snippets flycheck-irony ggtags company-irony irony yasnippet rtags cmake-ide company tabbar sr-speedbar spacemacs-theme simpleclip sane-term powerline panda-theme origami neotree minimap markdown-preview-eww markdown-mode+ latex-preview-pane helm flycheck flx-ido elfeed edit-indirect dracula-theme dashboard ctags-update counsel blackboard-theme auto-complete auctex))
-
- 
- '(shell-pop-autocd-to-working-dir t)
- '(shell-pop-cleanup-buffer-at-process-exit t)
- '(shell-pop-full-span t)
- '(shell-pop-restore-window-configuration t)
- '(shell-pop-shell-type
-   '("ansi-term" "*ansi*"
-     (lambda nil
-       (ansi-term shell-pop-term-shell))))
- '(shell-pop-term-shell "/bin/bash")
- '(shell-pop-universal-key "C-a")
- '(shell-pop-window-position "bottom")
- '(sr-speedbar-auto-refresh t))
 ;;; '(term-char-mode-buffer-read-only nil))
 
 
