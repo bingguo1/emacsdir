@@ -2,7 +2,9 @@
 
 (require 'package)
 
-(define-key input-decode-map "\C-i" [C-i]) ;;;; unbound C-i from tab key
+
+(if window-system
+    (define-key input-decode-map "\C-i" [C-i])) ;;;; unbound C-i from tab key ;;;; this is okay for window emacs, but iterm emacs will fail to use tab key
 ;;;;;when double clicking with mouse, normally i want to select a long word which contain underscore and dot, to do this, the definition of word has to be changed.
 (modify-syntax-entry ?_ "w" (standard-syntax-table))
 (modify-syntax-entry ?. "w" (standard-syntax-table))
@@ -203,8 +205,10 @@
 (with-eval-after-load 'org
     (org-download-enable))
 
-(setq org-default-notes-file "~/doc_emacs/orgs/tasks.org")
-(setq org-agenda-files '("~/doc_emacs/orgs/agenda/"))
+(unless (string= (user-login-name) "mylab")
+  (setq org-default-notes-file "~/doc_emacs/orgs/tasks.org")
+  (setq org-agenda-files '("~/doc_emacs/orgs/agenda/"))
+)
 
 (require 'ox-latex)
 (add-to-list 'org-latex-classes
