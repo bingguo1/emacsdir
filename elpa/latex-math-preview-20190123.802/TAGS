@@ -1,0 +1,176 @@
+
+../../../emacsd_own/elpa/latex-math-preview-20190123.802/latex-math-preview.el,18535
+(defgroup latex-math-preview nillatex-math-preview428,20575
+(defvar latex-math-preview-expression-buffer-namelatex-math-preview-expression-buffer-name434,20692
+(defvar latex-math-preview-tex-processing-error-buffer-namelatex-math-preview-tex-processing-error-buffer-name438,20829
+(defvar latex-math-preview-error-buffer-major-mode 'latex-modelatex-math-preview-error-buffer-major-mode442,21005
+(defvar latex-math-preview-insert-symbol-buffer-namelatex-math-preview-insert-symbol-buffer-name445,21108
+(defvar latex-math-preview-temporary-file-prefixlatex-math-preview-temporary-file-prefix449,21275
+(defvar latex-math-preview-cache-directory-for-insertionlatex-math-preview-cache-directory-for-insertion453,21428
+(defvar latex-math-preview-latex-template-headerlatex-math-preview-latex-template-header457,21572
+(defvar latex-math-preview-latex-usepackage-for-not-tex-filelatex-math-preview-latex-usepackage-for-not-tex-file461,21744
+(defvar latex-math-preview-template-header-for-save-imagelatex-math-preview-template-header-for-save-image465,21906
+(defvar latex-math-preview-match-expression-remove-formula-numberlatex-math-preview-match-expression-remove-formula-number469,22087
+(defvar latex-math-preview-image-foreground-color nillatex-math-preview-image-foreground-color473,22287
+(defvar latex-math-preview-image-background-color nillatex-math-preview-image-background-color476,22392
+(defvar latex-math-preview-dvipng-color-option nillatex-math-preview-dvipng-color-option479,22497
+(defvar latex-math-preview-previous-window-configuration nillatex-math-preview-previous-window-configuration483,22694
+(defvar latex-math-preview-current-insert-mode nillatex-math-preview-current-insert-mode488,22999
+(defvar latex-math-preview-match-expressionlatex-math-preview-match-expression491,23109
+(defvar latex-math-preview-list-name-symbol-datasetslatex-math-preview-list-name-symbol-datasets523,24343
+(defvar latex-math-preview-select-preview-window tlatex-math-preview-select-preview-window528,24543
+(defun latex-math-preview-insert-enclosed-symbol (&rest list)latex-math-preview-insert-enclosed-symbol534,24784
+(defun latex-math-preview-symbol-make (obj dir &optional math)latex-math-preview-symbol-make538,24911
+(defun latex-math-preview-symbol-string (sym)latex-math-preview-symbol-string558,25698
+(defun latex-math-preview-symbol-insert-candidate (sym format-str col line)latex-math-preview-symbol-insert-candidate561,25832
+(defun latex-math-preview-symbol-insert-item (sym)latex-math-preview-symbol-insert-item578,26510
+(defun latex-math-preview-symbol-tex-source (sym packages)latex-math-preview-symbol-tex-source581,26647
+(defvar latex-math-preview-textcomp-symbol-datasetlatex-math-preview-textcomp-symbol-dataset587,26939
+(defvar latex-math-preview-pifont-zapf-dingbats-symbol-datasetlatex-math-preview-pifont-zapf-dingbats-symbol-dataset620,29177
+(defvar latex-math-preview-pifont-symbol-fonts-symbol-datasetlatex-math-preview-pifont-symbol-fonts-symbol-dataset668,32408
+(defvar latex-math-preview-text-symbol-datasetslatex-math-preview-text-symbol-datasets742,37476
+(defvar latex-math-preview-mathematical-symbol-datasetslatex-math-preview-mathematical-symbol-datasets785,39590
+(defvar latex-math-preview-always-maximize-window nillatex-math-preview-always-maximize-window949,49593
+(defvar latex-math-preview-restore-last-page-of-symbol-list tlatex-math-preview-restore-last-page-of-symbol-list952,49735
+(defvar latex-math-preview-recent-inserted-symbol-number 30)latex-math-preview-recent-inserted-symbol-number956,49929
+(defvar latex-math-preview-recent-inserted-symbol '((math . nil) (text . nil))latex-math-preview-recent-inserted-symbol958,49991
+(defvar latex-math-preview-initial-page-of-symbol-listlatex-math-preview-initial-page-of-symbol-list961,50098
+(defvar latex-math-preview-current-page-of-symbol-list '((math . nil) (text . nil))latex-math-preview-current-page-of-symbol-list966,50354
+(defvar latex-math-preview-information-line-number nillatex-math-preview-information-line-number969,50515
+(defface latex-math-preview-candidate-for-insertion-facelatex-math-preview-candidate-for-insertion-face972,50661
+(defface latex-math-preview-key-for-insertion-facelatex-math-preview-key-for-insertion-face976,50810
+(defvar latex-math-preview-selection-face-for-insertion 'highlightlatex-math-preview-selection-face-for-insertion980,50953
+(defvar latex-math-preview-selection-overlay-for-insertion nillatex-math-preview-selection-overlay-for-insertion983,51060
+(defvar latex-math-preview-not-delete-tmpfile nillatex-math-preview-not-delete-tmpfile986,51179
+(defvar latex-math-preview-dvipng-log-buffer nillatex-math-preview-dvipng-log-buffer989,51321
+(defvar latex-math-preview-in-math-mode-p-func 'latex-math-preview-in-math-mode-platex-math-preview-in-math-mode-p-func992,51432
+(define-derived-mode latex-math-preview-expression-mode image-mode "LaTeXPreview"latex-math-preview-expression-mode996,51700
+(defvar latex-math-preview-insert-symbol-map nillatex-math-preview-insert-symbol-map1011,52798
+(defvar latex-math-preview-working-directory nillatex-math-preview-working-directory1062,56277
+(defvar latex-math-preview-command-buffer "*latex-math-preview-command*"latex-math-preview-command-buffer1065,56382
+(defvar latex-math-preview-trim-image nillatex-math-preview-trim-image1068,56493
+(defvar latex-math-preview-gs-resolution 100latex-math-preview-gs-resolution1072,56629
+(defvar latex-math-preview-command-path-alist nillatex-math-preview-command-path-alist1075,56735
+(defvar latex-math-preview-command-option-alistlatex-math-preview-command-option-alist1078,56825
+(defvar latex-math-preview-command-trim-option-alistlatex-math-preview-command-trim-option-alist1088,57399
+(defvar latex-math-preview-tex-to-png-for-previewlatex-math-preview-tex-to-png-for-preview1097,57846
+(defvar latex-math-preview-tex-to-png-for-savelatex-math-preview-tex-to-png-for-save1102,58018
+(defvar latex-math-preview-tex-to-eps-for-savelatex-math-preview-tex-to-eps-for-save1107,58184
+(defvar latex-math-preview-tex-to-ps-for-savelatex-math-preview-tex-to-ps-for-save1112,58356
+(defvar latex-math-preview-beamer-to-pnglatex-math-preview-beamer-to-png1117,58525
+(defvar latex-math-preview-conversion-variableslatex-math-preview-conversion-variables1122,58716
+(defun latex-math-preview-get-command-path (command-key)latex-math-preview-get-command-path1132,59069
+(defun latex-math-preview-get-command-option (key)latex-math-preview-get-command-option1135,59225
+(defun latex-math-preview-call-command-process (command args)latex-math-preview-call-command-process1140,59475
+(defun latex-math-preview-latex-command-execute (command input opts extension)latex-math-preview-latex-command-execute1143,59624
+(defvar latex-math-preview-convert-dvipng-color-mode nil)latex-math-preview-convert-dvipng-color-mode1168,61039
+(defun latex-math-preview-read-image-color-argument (prompt default-val)latex-math-preview-read-image-color-argument1170,61098
+(defun latex-math-preview-argument-dvipng (command input)latex-math-preview-argument-dvipng1184,61642
+(defun latex-math-preview-change-file-extension (command input)latex-math-preview-change-file-extension1206,62638
+(defun latex-math-preview-argument-convert-dvi (command input)latex-math-preview-argument-convert-dvi1209,62810
+(defun latex-math-preview-argument-dvipdf (command input)latex-math-preview-argument-dvipdf1214,63057
+(defun latex-math-preview-argument-gs-to-png (command input)latex-math-preview-argument-gs-to-png1219,63294
+(defvar latex-math-preview-command-create-argument-alistlatex-math-preview-command-create-argument-alist1226,63642
+(defun latex-math-preview-get-command-argument (command input)latex-math-preview-get-command-argument1237,64213
+(defun latex-math-preview-call-latex-command (command-path command input)latex-math-preview-call-latex-command1241,64413
+(defmacro latex-math-preview-define-convert-function (command)latex-math-preview-define-convert-function1245,64649
+(defun latex-math-preview-successive-convert (input &rest convert-list)latex-math-preview-successive-convert1262,65554
+(defun latex-math-preview-completing-read-convert-command-sequence ()latex-math-preview-completing-read-convert-command-sequence1270,65866
+(defun latex-math-preview-set-conversion-command ()latex-math-preview-set-conversion-command1283,66390
+(defvar latex-math-preview-custom-conversion-to-save-image nil)latex-math-preview-custom-conversion-to-save-image1293,66863
+(defvar latex-math-preview-convert-command-list nil)latex-math-preview-convert-command-list1295,66928
+(defun latex-math-preview-reset-custom-convert ()latex-math-preview-reset-custom-convert1297,66982
+(defun latex-math-preview-set-custom-convert ()latex-math-preview-set-custom-convert1302,67167
+(defvar latex-math-preview-usepackage-cache nillatex-math-preview-usepackage-cache1322,67902
+(defun latex-math-preview-search-header-usepackage ()latex-math-preview-search-header-usepackage1329,68301
+(defun latex-math-preview-search-header-usepackage-other-file (filename)latex-math-preview-search-header-usepackage-other-file1343,68954
+(defun latex-math-preview-get-header-usepackage ()latex-math-preview-get-header-usepackage1352,69286
+(defvar latex-math-preview-edit-usepackage-buffer "*latex-math-preview: usepackage cache*")latex-math-preview-edit-usepackage-buffer1381,70653
+(defvar latex-math-preview-edit-usepackage-parent-buffer nil)latex-math-preview-edit-usepackage-parent-buffer1382,70745
+(defvar latex-math-preview-edit-usepackage-map nillatex-math-preview-edit-usepackage-map1383,70807
+(defvar latex-math-preview-usepackage-filter-alist nillatex-math-preview-usepackage-filter-alist1385,70930
+(defun latex-math-preview-edit-usepackage ()latex-math-preview-edit-usepackage1398,71589
+(defun latex-math-preview-edit-usepackage-finish ()latex-math-preview-edit-usepackage-finish1418,72455
+(defun latex-math-preview-reload-usepackage (&optional other-file)latex-math-preview-reload-usepackage1429,72957
+(defun latex-math-preview-bounds-of-latex-math ()latex-math-preview-bounds-of-latex-math1440,73483
+(defun latex-math-preview-in-math-mode-p ()latex-math-preview-in-math-mode-p1484,75528
+(defun latex-math-preview-clear-working-directory ()latex-math-preview-clear-working-directory1490,75811
+(defun latex-math-preview-create-temporary-tex-filename ()latex-math-preview-create-temporary-tex-filename1495,76094
+(defun latex-math-preview-make-temporary-tex-file (math-exp template-header &optional usepackages)latex-math-preview-make-temporary-tex-file1499,76342
+(defun latex-math-preview-raise-can-not-create-image (dot-tex)latex-math-preview-raise-can-not-create-image1511,76935
+(defun latex-math-preview-make-png-file (dot-tex)latex-math-preview-make-png-file1529,78049
+(defun latex-math-preview-clear-tmp-directory (dir)latex-math-preview-clear-tmp-directory1536,78397
+(defvar latex-math-preview-display-whole-imagelatex-math-preview-display-whole-image1557,79207
+(defun latex-math-preview-get-expression-buffer ()latex-math-preview-get-expression-buffer1561,79343
+(defun latex-math-preview-png-image (image &optional win-conf)latex-math-preview-png-image1569,79637
+(defun latex-math-preview-get-dvipng-color-option ()latex-math-preview-get-dvipng-color-option1589,80686
+(defun latex-math-preview-convert-to-output-file (func args output)latex-math-preview-convert-to-output-file1613,81495
+(defun latex-math-preview-cut-mathematical-expression (&optional remove-num-expression)latex-math-preview-cut-mathematical-expression1621,81711
+(defun latex-math-preview-expression ()latex-math-preview-expression1635,82281
+(defun latex-math-preview-make-image-for-save (func-sequence output dot-tex)latex-math-preview-make-image-for-save1648,83008
+(defun latex-math-preview-prompt-for-save-image-file (use-custom-conversion)latex-math-preview-prompt-for-save-image-file1656,83442
+(defun latex-math-preview-save-image-file (use-custom-conversion &optional output)latex-math-preview-save-image-file1665,83886
+(defun latex-math-preview-quit-window ()latex-math-preview-quit-window1696,85538
+(defun latex-math-preview-delete-buffer ()latex-math-preview-delete-buffer1703,85824
+(defvar latex-math-preview-insert-symbol-column-size nil)latex-math-preview-insert-symbol-column-size1721,86495
+(defun latex-math-preview-cache-directory (key)latex-math-preview-cache-directory1724,86629
+(defun latex-math-preview-clear-cache-for-insertion (&optional key)latex-math-preview-clear-cache-for-insertion1727,86747
+(defun latex-math-preview-make-symbol-candidate-image (latex-symbol packages)latex-math-preview-make-symbol-candidate-image1739,87382
+(defun latex-math-preview-make-symbol-caches (key dataset type)latex-math-preview-make-symbol-caches1751,88043
+(defun latex-math-preview-make-all-cache-images ()latex-math-preview-make-all-cache-images1770,88817
+(defun latex-math-preview-strings-and-images-sizes (sym-list)latex-math-preview-strings-and-images-sizes1783,89294
+(defun latex-math-preview-insert-key-explanations ()latex-math-preview-insert-key-explanations1795,89891
+(defun latex-math-preview-insert-subcategory-infomation (subcat-str packages)latex-math-preview-insert-subcategory-infomation1816,90671
+(defun latex-math-preview-insert-candidate-images (key dataset)latex-math-preview-insert-candidate-images1835,91397
+(defun latex-math-preview-get-insertion-buffer ()latex-math-preview-get-insertion-buffer1874,93129
+(defun latex-math-preview-insertion-get-current-page-key ()latex-math-preview-insertion-get-current-page-key1886,93557
+(defun latex-math-preview-insertion-set-current-page-key (key)latex-math-preview-insertion-set-current-page-key1891,93801
+(defun latex-math-preview-insertion-current-symbol-datasets ()latex-math-preview-insertion-current-symbol-datasets1895,93976
+(defun latex-math-preview-insertion-current-page-data (key)latex-math-preview-insertion-current-page-data1899,94161
+(defun latex-math-preview-symbol-dataset-item-exist-p (dataset)latex-math-preview-symbol-dataset-item-exist-p1910,94766
+(defun latex-math-preview-create-buffer-for-insertion (key &optional next-page)latex-math-preview-create-buffer-for-insertion1917,94954
+(defun latex-math-preview-insert-symbol-read-page-number ()latex-math-preview-insert-symbol-read-page-number1942,96140
+(defun latex-math-preview-insert-symbol-base (num)latex-math-preview-insert-symbol-base1945,96292
+(defun latex-math-preview-insert-mathematical-symbol (&optional num)latex-math-preview-insert-mathematical-symbol1952,96578
+(defun latex-math-preview-insert-text-symbol (&optional num)latex-math-preview-insert-text-symbol1959,96839
+(defun latex-math-preview-set-current-insert-mode ()latex-math-preview-set-current-insert-mode1965,97072
+(defun latex-math-preview-insert-symbol (&optional num)latex-math-preview-insert-symbol1970,97257
+(defun latex-math-preview-symbols-of-other-page ()latex-math-preview-symbols-of-other-page1977,97518
+(defun latex-math-preview-get-current-page-number (key)latex-math-preview-get-current-page-number1983,97685
+(defun latex-math-preview-next-candidates-for-insertion (num)latex-math-preview-next-candidates-for-insertion1991,98012
+(defun latex-math-preview-previous-candidates-for-insertion (num)latex-math-preview-previous-candidates-for-insertion2005,98631
+(defun latex-math-preview-toggle-window-maximization ()latex-math-preview-toggle-window-maximization2010,98836
+(defun latex-math-preview-put-selected-candidate ()latex-math-preview-put-selected-candidate2018,99231
+(defun latex-math-preview-put-candidate-mouse-selecting (event)latex-math-preview-put-candidate-mouse-selecting2031,99888
+(defun latex-math-preview-delete-current-cache ()latex-math-preview-delete-current-cache2038,100137
+(defun latex-math-preview-last-symbol-again ()latex-math-preview-last-symbol-again2047,100477
+(defun latex-math-preview-symbol-recent-used-text ()latex-math-preview-symbol-recent-used-text2055,100865
+(defun latex-math-preview-symbol-recent-used-math ()latex-math-preview-symbol-recent-used-math2059,101022
+(defun latex-math-preview-set-overlay-for-selected-item ()latex-math-preview-set-overlay-for-selected-item2066,101282
+(defun latex-math-preview-candidate-for-insertion-point-p ()latex-math-preview-candidate-for-insertion-point-p2080,101921
+(defun latex-math-preview-goto-right-of-item ()latex-math-preview-goto-right-of-item2083,102074
+(defun latex-math-preview-goto-left-of-item ()latex-math-preview-goto-left-of-item2089,102336
+(defun latex-math-preview-move-to-right-item ()latex-math-preview-move-to-right-item2095,102599
+(defun latex-math-preview-move-to-left-item ()latex-math-preview-move-to-left-item2103,102891
+(defun latex-math-preview-move-to-upward-item ()latex-math-preview-move-to-upward-item2111,103181
+(defun latex-math-preview-move-to-downward-item ()latex-math-preview-move-to-downward-item2124,103852
+(defun latex-math-preview-move-to-current-line-first-item ()latex-math-preview-move-to-current-line-first-item2146,104969
+(defun latex-math-preview-move-to-current-line-last-item ()latex-math-preview-move-to-current-line-last-item2153,105267
+(defun latex-math-preview-move-to-beginning-of-candidates ()latex-math-preview-move-to-beginning-of-candidates2167,105945
+(defun latex-math-preview-move-to-end-of-candidates ()latex-math-preview-move-to-end-of-candidates2173,106144
+(defun latex-math-preview-scroll-up ()latex-math-preview-scroll-up2179,106335
+(defun latex-math-preview-scroll-down ()latex-math-preview-scroll-down2189,106772
+(defvar latex-math-preview-insert-isearch-maplatex-math-preview-insert-isearch-map2197,107051
+(defun latex-math-preview-insert-isearch-exit ()latex-math-preview-insert-isearch-exit2203,107282
+(defun latex-math-preview-insert-isearch-forward ()latex-math-preview-insert-isearch-forward2209,107446
+(defun latex-math-preview-insert-isearch-backward ()latex-math-preview-insert-isearch-backward2214,107605
+(defun latex-math-preview-search-beamer-frame-region ()latex-math-preview-search-beamer-frame-region2222,107871
+(defun latex-math-preview-search-beamer-preamble ()latex-math-preview-search-beamer-preamble2259,109000
+(defun latex-math-preview-make-temporary-beamer-tex-file ()latex-math-preview-make-temporary-beamer-tex-file2268,109310
+(defun latex-math-preview-beamer-frame ()latex-math-preview-beamer-frame2282,109845
+
+../../../emacsd_own/elpa/latex-math-preview-20190123.802/latex-math-preview-pkg.el,372
+(define-package "latex-math-preview" "20190123.802" "preview LaTeX mathematical expressions." 'nil :commit "90fd86da2d9514882146a5db40cb916fc533cf55" :keywords '("latex" "tex") :authors '(("Takayuki YAMAGUCHI" . "d@ytak.info")) :maintainer '("Takayuki YAMAGUCHI" . "d@ytak.info") :url "https://gitlab.com/latex-math-preview/latex-math-preview")"latex-math-preview"2,147
+
+../../../emacsd_own/elpa/latex-math-preview-20190123.802/latex-math-preview-autoloads.el,98
+(defvar cl-struct-latex-math-preview-symbol-tags)cl-struct-latex-math-preview-symbol-tags15,525

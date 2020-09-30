@@ -2,11 +2,7 @@
 
 (require 'package)
 
-;; (define-prefix-command 'ccm-map)
-;; (global-set-key (kbd "C-c m") 'ccm-map)
-;; (define-prefix-command 'ccc-map)
-;; (global-set-key (kbd "C-c c") 'ccm-map)
-
+(define-key input-decode-map "\C-i" [C-i]) ;;;; unbound C-i from tab key
 ;;;;;when double clicking with mouse, normally i want to select a long word which contain underscore and dot, to do this, the definition of word has to be changed.
 (modify-syntax-entry ?_ "w" (standard-syntax-table))
 (modify-syntax-entry ?. "w" (standard-syntax-table))
@@ -474,7 +470,7 @@
 
 
 ;;;;;;;;;;;;;;;;;; dashboard
-(require 'dashboard)
+;;(require 'dashboard)
 (dashboard-setup-startup-hook)
 
 
@@ -528,7 +524,10 @@
 	    (setq LaTeX-command-style  '(("" "%(PDF)%(latex) -shell-escape --synctex=1 %(file-line-error) %(extraopts) %S%(PDFout)")))
 	    (setq TeX-source-correlate-method 'synctex)
 	    (setq TeX-source-correlate-mode t)
-	    (setq TeX-source-correlate-start-server t)	    	    
+	    (setq TeX-source-correlate-start-server t)
+	    (define-key LaTeX-mode-map [C-i] 'latex-math-preview-insert-symbol)
+	    (define-key LaTeX-mode-map (kbd "C-e") 'latex-math-preview-expression)	    
+	    
 ))
 (add-hook 'LaTeX-mode-hook 'turn-on-cdlatex)
 
