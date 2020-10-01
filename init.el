@@ -5,10 +5,44 @@
 
 (if window-system
     (define-key input-decode-map "\C-i" [C-i])) ;;;; unbound C-i from tab key ;;;; this is okay for window emacs, but iterm emacs will fail to use tab key
+
+(global-set-key (kbd "C-/") 'comment-region)
+(defun get-word-boundary ()
+  "Return the boundary of the current word.
+         The return value is of the form: (cons pos1 pos2).
+         "
+  (save-excursion
+    (let (p1 p2)
+      (progn
+        (skip-chars-backward "-A-Za-z0-9_.~/+*") ;; here you can choose which symbols to use
+        (setq p1 (point))
+        (skip-chars-forward "-A-Za-z0-9_.~/+*") ;; put the same here
+        (setq p2 (point)))
+      (cons p1 p2)
+      ))
+  )
+(defun select-word ()
+  "Mark the url under cursor."
+  (interactive)
+					;  (require 'thingatpt)
+  (let (bds)
+    (setq bds (get-word-boundary))
+    
+    (set-mark (car bds))
+    (goto-char (cdr bds))
+    )
+  )
+
+
+
+
+(global-set-key [double-mouse-1] 'select-word)
+
+
 ;;;;;when double clicking with mouse, normally i want to select a long word which contain underscore and dot, to do this, the definition of word has to be changed.
-(modify-syntax-entry ?_ "w" (standard-syntax-table))
-(modify-syntax-entry ?. "w" (standard-syntax-table))
-(modify-syntax-entry ?/ "w" (standard-syntax-table))
+;(modify-syntax-entry ?_ "w" (standard-syntax-table))
+;(modify-syntax-entry ?. "w" (standard-syntax-table))
+;(modify-syntax-entry ?/ "w" (standard-syntax-table))
 
 (add-hook 'prog-mode-hook 'linum-mode)
 
@@ -355,9 +389,12 @@
   (let ((map (if (boundp 'input-decode-map)
                  input-decode-map
                function-key-map)))
-    (define-key map "\e[1;P1"  (kbd "C-1"))
-    (define-key map "\e[1;PT"  (kbd "C-<tab>"))
+    (define-key map "\e[1;C1"  (kbd "C-1"))
+    (define-key map "\e[1;CT"  (kbd "C-<tab>"))
     (define-key map "\e[1;SU"  (kbd "s-u"))
+    (define-key map "\e[1;9C" (kbd "M-<right>"))
+    (define-key map "\e[1;9D" (kbd "M-<left>"))
+    (define-key map "\e[1;C/" (kbd "C-/"))
     ))
 
 (global-set-key (kbd "s-u") 'revert-buffer)
@@ -369,6 +406,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(company-auto-commit nil)
  '(mouse-drag-and-drop-region 'modifier)
  '(mouse-drag-and-drop-region-cut-when-buffers-differ t)
  '(org-download-image-org-width 300)
@@ -414,10 +452,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;company 
 (add-hook 'after-init-hook 'global-company-mode)
 (with-eval-after-load 'company
-  (defun company--my-insert-spc() (interactive) (company-abort)(insert-char #10r32))
+;;  (defun company--my-insert-spc() (interactive) (company-abort)(insert-char #10r32))
 ;;   (defun company--my-insert-dot() (interactive) (company-abort)(insert-char #10r46))
    (define-key company-active-map (kbd "q") 'company-abort)
-   (define-key company-active-map (kbd "SPC") 'company--my-insert-spc)
+;;   (define-key company-active-map (kbd "SPC") 'company--my-insert-spc)
    ;;   (define-key company-active-map (kbd ".") 'company--my-insert-dot)
    )
 (setq company-idle-delay 0)
@@ -435,7 +473,7 @@
 ;;         ))
 (defun my-c++mode-company-hook ()
   ;;  (ycmd-mode t)
-  (setq company-auto-complete t)
+ ;;  (setq company-auto-complete t) ;;; never use this 
   (setq company-minimum-prefix-length 3)
   (setq company-backends
         '((
