@@ -413,6 +413,20 @@
  '(org-download-screenshot-method "screencapture -i %s")
  '(package-selected-packages
    '(latex-math-preview org-download cdlatex pdf-tools shell-pop multiple-cursors exec-path-from-shell which-key smartparens yasnippet-snippets flycheck-irony ggtags company-irony irony yasnippet rtags cmake-ide company tabbar sr-speedbar spacemacs-theme simpleclip sane-term powerline panda-theme origami neotree minimap markdown-preview-eww markdown-mode+ latex-preview-pane helm flycheck flx-ido elfeed edit-indirect dracula-theme dashboard ctags-update counsel blackboard-theme auto-complete auctex))
+ '(safe-local-variable-values
+   '((eval setq cmake-ide-build-dir my-project-path)
+     (eval setq cmake-ide-project-dir my-project-path)
+     (eval message "Project directory set to `%s'." my-project-path)
+     (eval set
+	   (make-local-variable 'my-project-path)
+	   (file-name-directory
+	    (let
+		((d
+		  (dir-locals-find-file "./")))
+	      (if
+		  (stringp d)
+		  d
+		(car d)))))))
  '(shell-pop-autocd-to-working-dir t)
  '(shell-pop-cleanup-buffer-at-process-exit t)
  '(shell-pop-full-span t)
