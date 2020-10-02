@@ -1,0 +1,54 @@
+# -*- mode: snippet -*-
+# name: beamer
+# key: bea
+# --
+\documentclass [xcolor=svgnames, t] {beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{booktabs, comment}
+\usepackage[absolute, overlay]{textpos}
+\useoutertheme{infolines}
+\setbeamercolor{title in head/foot}{bg=internationalorange}
+\setbeamercolor{author in head/foot}{bg=dodgerblue}
+\usepackage{csquotes}
+\usepackage[style=verbose-ibid,backend=bibtex]{biblatex}
+%\bibliography{bibfile}
+\usepackage{amsmath}
+\usepackage[makeroom]{cancel}
+\usepackage{textpos}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
+\newcolumntype{L}{>{\centering\arraybackslash}m{1.2cm}}
+
+
+\graphicspath{{/Users/bing/physicswork/ndwork/beamMonitoring/apr2020/}}    % don't forget the last ``/''
+
+\usetheme{Madrid}
+\definecolor{myuniversity}{RGB}{115, 0, 10}
+\definecolor{internationalorange}{RGB}{231, 93,  42}
+\definecolor{dodgerblue}{RGB}{0, 119,202}
+\usecolortheme[named=myuniversity]{structure}
+\usepackage{tikz}
+
+
+\title[$0]{my title}
+\author[B Guo]{Bing Guo}
+\date{\today}
+\institute[]{Dept. of Physics and Astronomy \\\\University of South Carolina}
+
+
+\addtobeamertemplate{navigation symbols}{}{%
+    \usebeamerfont{footline}%
+    \usebeamercolor[fg]{footline}%
+    \hspace{1em}%
+    \insertframenumber/\inserttotalframenumber
+}
+
+\begin{document}
+\begin{frame}[plain]
+ \titlepage
+\end{frame}
+
+\end{document}
