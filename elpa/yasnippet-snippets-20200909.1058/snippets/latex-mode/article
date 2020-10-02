@@ -1,11 +1,19 @@
 # -*- mode: snippet -*-
 # name: full template of article class
-# key: article
+# key: art
 # --
-\documentclass[${1:options}]{article}
+\documentclass[a4paper]{article}
+\usepackage{amsmath,amsthm,amssymb,amsfonts}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{geometry} % This package allows the editing of the page layout
 
-\author{$3}
+\author{Bing Guo}
+\title{my title}
+\date{\today}
+
 
 \begin{document}
+\maketitle
 $0
 \end{document}

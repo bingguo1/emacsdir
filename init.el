@@ -412,6 +412,7 @@
  '(org-download-image-org-width 300)
  '(org-download-screenshot-method "screencapture -i %s")
  '(package-selected-packages
+<<<<<<< HEAD
    '(latex-math-preview org-download cdlatex pdf-tools shell-pop multiple-cursors exec-path-from-shell which-key smartparens yasnippet-snippets flycheck-irony ggtags company-irony irony yasnippet rtags cmake-ide company tabbar sr-speedbar spacemacs-theme simpleclip sane-term powerline panda-theme origami neotree minimap markdown-preview-eww markdown-mode+ latex-preview-pane helm flycheck flx-ido elfeed edit-indirect dracula-theme dashboard ctags-update counsel blackboard-theme auto-complete auctex))
  '(safe-local-variable-values
    '((eval setq cmake-ide-build-dir my-project-path)
@@ -427,6 +428,9 @@
 		  (stringp d)
 		  d
 		(car d)))))))
+=======
+   '(pdf-tools latex-math-preview org-download cdlatex shell-pop multiple-cursors exec-path-from-shell which-key smartparens yasnippet-snippets flycheck-irony ggtags company-irony irony yasnippet rtags cmake-ide company tabbar sr-speedbar spacemacs-theme simpleclip sane-term powerline panda-theme origami neotree minimap markdown-preview-eww markdown-mode+ latex-preview-pane helm flycheck flx-ido elfeed edit-indirect dracula-theme dashboard ctags-update counsel blackboard-theme auto-complete auctex))
+>>>>>>> c1e84e3074ff84eca8810192064db2363bd194cf
  '(shell-pop-autocd-to-working-dir t)
  '(shell-pop-cleanup-buffer-at-process-exit t)
  '(shell-pop-full-span t)
@@ -458,8 +462,8 @@
 ;;;;;;;;;;; yas
 (require 'yasnippet)
 (yas-reload-all)
+;;(yas-global-mode 1)
 (add-hook 'c++-mode-hook #'yas-minor-mode)
-
 
 
 
@@ -551,6 +555,7 @@
 (add-hook 'LaTeX-mode-hook
 	  (lambda ()
 
+	    (yas-minor-mode)
 	    (setq company-minimum-prefix-length 4)
 	    (flyspell-mode)
 
@@ -558,9 +563,9 @@
 	    (setq TeX-parse-self t)
 	    ;;(setq-default TeX-master nil) ;; enable only when working with multiple file system
 	    (setq TeX-PDF-mode t)
-	    (latex-preview-pane-enable)
+	    ;;	    (latex-preview-pane-enable)
 	    (setq doc-view-continuous t) ;;;; so the pdf on my preview-pane can scroll continuously	    
-	    ;;(pdf-tools-install)
+	    ;;	    (pdf-tools-install)
 	    (pdf-loader-install)
 	    (setq TeX-view-program-selection '((output-pdf "pdf-tools"))
 		  TeX-source-correlate-start-server t)
@@ -582,7 +587,8 @@
 	    (setq TeX-source-correlate-mode t)
 	    (setq TeX-source-correlate-start-server t)
 	    (define-key LaTeX-mode-map [C-i] 'latex-math-preview-insert-symbol)
-	    (define-key LaTeX-mode-map (kbd "C-e") 'latex-math-preview-expression)	    
+	    (define-key LaTeX-mode-map (kbd "C-e") 'latex-math-preview-expression)
+	    (define-key LaTeX-mode-map (kbd "C-t") 'format-to-latex-table)
 	    
 ))
 (add-hook 'LaTeX-mode-hook 'turn-on-cdlatex)
@@ -764,3 +770,38 @@ Version 2019-01-16"
  '(comint-highlight-prompt ((t (:foreground "magenta"))))
  '(isearch ((t (:inherit region :background "brightyellow" :foreground "#1B1E1C"))))
  '(lazy-highlight ((t (:inherit highlight :background "#FF99999")))))
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;; latex format table
+
+(defun format-to-latex-table (top bottom)                                                                          
+  "format a simple table to latex format."                                                                          
+  (interactive "r")
+
+  (let ((end bottom) 
+        char next-line)
+    (goto-char top)
+    (deactivate-mark)
+    (if (not (bolp))
+        (forward-line 1))
+    (setq next-line (point))
+    (while (< next-line bottom)
+      (forward-char)
+      (while (not (eolp))
+        (while (and (not (string= " " (string (char-after)))) (not (string= "\t" (string (char-after)))) (not (eolp)))
+	  (if (string= "%" (string (char-after)))
+	      (insert "\\"))
+          (forward-char)
+          )          
+        (if (not (eolp))
+	    (progn 
+              (insert "&")
+	      (forward-word))	      
+	  )
+        )          
+      (insert "\\\\")
+      (forward-line)
+      (setq next-line (point))
+      )))
