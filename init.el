@@ -2,6 +2,7 @@
 
 (require 'package)
 
+
 (define-key isearch-mode-map (kbd "C-o") 'isearch-occur)
 
 (defun my-set-margins ()  ;;;; the purpose is to show flycheck error indicatioin on left margin, at least 3 to let it appear
@@ -9,6 +10,10 @@
   (setq left-margin-width 3)
   (setq right-margin-width 0))
 (add-hook 'prog-mode-hook 'my-set-margins)
+
+(global-clipetty-mode)
+(global-set-key (kbd "M-c") 'clipetty-kill-ring-save)
+
 
 (if window-system
     (define-key input-decode-map "\C-i" [C-i])) ;;;; unbound C-i from tab key ;;;; this is okay for window emacs, but iterm emacs will fail to use tab key
@@ -334,7 +339,7 @@
 ;;             ))
 
 (global-set-key (kbd "M-w") 'kill-region)
-(global-set-key (kbd "M-c") 'kill-ring-save)
+;;(global-set-key (kbd "M-c") 'kill-ring-save)
 (global-set-key (kbd "M-v") 'yank)
 
 
@@ -381,7 +386,7 @@
 	    
 	    (define-key term-raw-map (kbd "M-x") 'helm-M-x)
 	    (define-key term-raw-map (kbd "<xterm-paste>") 'nil) ; ;;;;;; need this, or it will kill this SSH_session
-	    (define-key term-raw-map (kbd "M-c") 'kill-ring-save)  
+	    (define-key term-raw-map (kbd "M-c") 'clipetty-kill-ring-save)
 	    (define-key term-raw-map (kbd "M-v") 'term-paste)
 
 	    (define-key term-raw-map (kbd "M-f")    'term-send-Mright)  ;;;;; use M-<left/right>  does not work , i guess it's bound to M-f/b
@@ -420,21 +425,7 @@
  '(org-download-image-org-width 300)
  '(org-download-screenshot-method "screencapture -i %s")
  '(package-selected-packages
-   '(pdf-tools latex-math-preview org-download cdlatex shell-pop multiple-cursors exec-path-from-shell which-key smartparens yasnippet-snippets flycheck-irony ggtags company-irony irony yasnippet rtags cmake-ide company tabbar sr-speedbar spacemacs-theme simpleclip sane-term powerline panda-theme origami neotree minimap markdown-preview-eww markdown-mode+ latex-preview-pane helm flycheck flx-ido elfeed edit-indirect dracula-theme dashboard ctags-update counsel blackboard-theme auto-complete auctex))
- '(safe-local-variable-values
-   '((eval setq cmake-ide-build-dir my-project-path)
-     (eval setq cmake-ide-project-dir my-project-path)
-     (eval message "Project directory set to `%s'." my-project-path)
-     (eval set
-	   (make-local-variable 'my-project-path)
-	   (file-name-directory
-	    (let
-		((d
-		  (dir-locals-find-file "./")))
-	      (if
-		  (stringp d)
-		  d
-		(car d)))))))
+   '(clipetty pdf-tools latex-math-preview org-download cdlatex shell-pop multiple-cursors exec-path-from-shell which-key smartparens yasnippet-snippets flycheck-irony ggtags company-irony irony yasnippet rtags cmake-ide company tabbar sr-speedbar spacemacs-theme simpleclip sane-term powerline panda-theme origami neotree minimap markdown-preview-eww markdown-mode+ latex-preview-pane helm flycheck flx-ido elfeed edit-indirect dracula-theme dashboard ctags-update counsel blackboard-theme auto-complete auctex))
  '(shell-pop-autocd-to-working-dir t)
  '(shell-pop-cleanup-buffer-at-process-exit t)
  '(shell-pop-full-span t)
