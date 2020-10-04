@@ -12,7 +12,7 @@
 (add-hook 'prog-mode-hook 'my-set-margins)
 
 (global-clipetty-mode)
-(global-set-key (kbd "M-c") 'clipetty-kill-ring-save)
+(global-set-key (kbd "s-c") 'clipetty-kill-ring-save)
 
 
 (if window-system
@@ -386,7 +386,7 @@
 	    
 	    (define-key term-raw-map (kbd "M-x") 'helm-M-x)
 	    (define-key term-raw-map (kbd "<xterm-paste>") 'nil) ; ;;;;;; need this, or it will kill this SSH_session
-	    (define-key term-raw-map (kbd "M-c") 'clipetty-kill-ring-save)
+	    (define-key term-raw-map (kbd "s-c") 'clipetty-kill-ring-save)
 	    (define-key term-raw-map (kbd "M-v") 'term-paste)
 
 	    (define-key term-raw-map (kbd "M-f")    'term-send-Mright)  ;;;;; use M-<left/right>  does not work , i guess it's bound to M-f/b
@@ -404,6 +404,7 @@
     (define-key map "\e[1;C1"  (kbd "C-1"))
     (define-key map "\e[1;CT"  (kbd "C-<tab>"))
     (define-key map "\e[1;SU"  (kbd "s-u"))
+    (define-key map "\e[1;SC"  (kbd "s-c"))
     (define-key map "\e[1;9C" (kbd "M-<right>"))
     (define-key map "\e[1;9D" (kbd "M-<left>"))
     (define-key map "\e[1;C/" (kbd "C-/"))
