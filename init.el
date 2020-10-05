@@ -6,10 +6,18 @@
 ;;   (interactive)
 ;;   (call-process-region (point) (if mark-active (mark) (point)) "pbpaste" t t))
 
-(defun new-term-paste ()
-  "Insert the text pasted in an XTerm bracketed paste operation."
-  (interactive)
-  (term-send-raw-string  (shell-command-to-string "pbpaste")))
+;; (defun new-term-paste ()
+;;   "Insert the text pasted in an XTerm bracketed paste operation."
+;;   (interactive)
+;;   (term-send-raw-string  (shell-command-to-string "pbpaste")))
+;;;;;;;;;;; the following designed for paste stuff into emacs term and ansi-term
+(defun new-xterm-paste(event)
+  (interactive "e")
+  (unless (eq (car-safe event) 'xterm-paste)
+    (error "xterm-paste must be found to xterm-paste event"))
+  (let* ((pasted-text (nth 1 event)))
+    (term-send-raw-string pasted-text)))
+
 
 (define-key isearch-mode-map (kbd "C-o") 'isearch-occur)
 
@@ -345,7 +353,7 @@
 ;; 	    (define-key c-mode-base-map (kbd "C-p") 'hs-show-all)
 ;; 	    (define-key c-mode-base-map (kbd "C-o") 'hs-hide-all)
 ;;             ))
-
+(global-set-key (kbd "s-x") 'kill-region)
 (global-set-key (kbd "M-w") 'kill-region)
 (global-set-key (kbd "M-c") 'kill-ring-save)
 (global-set-key (kbd "M-v") 'yank)
@@ -368,9 +376,11 @@
 ;;;; term-raw-map is for term char mode, term-mode-map is for line mode of term
 (defun term-send-Mright () (interactive) (term-send-raw-string "\ef"))
 (defun term-send-Mleft  () (interactive) (term-send-raw-string "\eb"))
+(defun my-term-send-home  () (interactive) (term-send-raw-string "\e[H"))
+(defun my-term-send-end  () (interactive) (term-send-raw-string "\e[F"))
 (add-hook 'term-load-hook
 	  (lambda ()
-	 ;;   (setq term-char-mode-buffer-read-only nil)  ;;; no need
+	    (setq term-char-mode-buffer-read-only nil)  ;;; this have to be used, so new-xterm-paste can paste stuff into term and ansi-term
 	    (setq term-char-mode-point-at-process-mark nil) ;;; this will make backward-word and forward-word works!!!!
 	    (define-key term-raw-map (kbd "C-<left>") 'awesome-tab-backward-tab)
 	    (define-key term-raw-map (kbd "C-<right>") 'awesome-tab-forward-tab)
@@ -382,8 +392,7 @@
 	    (define-key term-raw-map (kbd "C-c") nil)
 	    (define-key term-raw-map (kbd "C-z") nil)
 	    (define-key term-raw-map (kbd "C-h") nil)
-
-	    
+	 	    
     
 	    (define-key term-raw-map (kbd "C-s") isearch-forward)
 	    ;;      (define-key term-raw-map (kbd "C-r") isearch-backward)  ;; C-r is already predefined, if you really want to change it, then set it nil first
@@ -393,13 +402,14 @@
 	    (define-key term-raw-map (kbd "C-c C-z") 'term-kill-subjob)
 	    
 	    (define-key term-raw-map (kbd "M-x") 'helm-M-x)
-	    (define-key term-raw-map (kbd "<xterm-paste>") 'new-term-paste)
+	    (define-key term-raw-map (kbd "<xterm-paste>") 'new-xterm-paste)
 	    (define-key term-raw-map (kbd "s-c") 'clipetty-kill-ring-save)
 	    (define-key term-raw-map (kbd "M-v") 'term-paste)
 
 	    (define-key term-raw-map (kbd "M-f")    'term-send-Mright)  ;;;;; use M-<left/right>  does not work , i guess it's bound to M-f/b
             (define-key term-raw-map (kbd "M-b")     'term-send-Mleft)
-	    
+	    (define-key term-raw-map (kbd "<home>")    'my-term-send-home) 
+	    (define-key term-raw-map (kbd "<end>")    'my-term-send-end)
     ))
 
 
@@ -413,6 +423,7 @@
     (define-key map "\e[1;CT"  (kbd "C-<tab>"))
     (define-key map "\e[1;SU"  (kbd "s-u"))
     (define-key map "\e[1;SC"  (kbd "s-c"))
+    (define-key map "\e[1;SX"  (kbd "s-x"))
     (define-key map "\e[1;9C" (kbd "M-<right>"))
     (define-key map "\e[1;9D" (kbd "M-<left>"))
     (define-key map "\e[1;C/" (kbd "C-/"))
