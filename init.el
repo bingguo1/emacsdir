@@ -2,6 +2,7 @@
 
 (require 'package)
 
+(run-at-time nil (* 15 60) 'recentf-save-list)
 ;; (defun pbpaste ()
 ;;   (interactive)
 ;;   (call-process-region (point) (if mark-active (mark) (point)) "pbpaste" t t))
@@ -300,7 +301,7 @@
   
   (require 'recentf)
   (recentf-mode 1)
-  (setq recentf-max-saved-items 50)
+  (setq recentf-max-saved-items 200)
   (global-set-key (kbd "C-x C-r") 'ido-recentf-open)
   (require 'smex) ; Not needed if you use package.el
   (smex-initialize) ; Can be omitted. This might cause a (minimal) delay
@@ -324,7 +325,7 @@
   (global-set-key (kbd "C-x C-r") 'helm-recentf)
 ; keep a list of recently opened files                                                                      
   (recentf-mode 1)
-  (setq recentf-max-saved-items 100)
+  (setq recentf-max-saved-items 200)
   (setq-default recent-save-file "~/.emacs.d/recentf"))
 
 ;;(use-flx-recentf-smex)
