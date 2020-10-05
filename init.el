@@ -2,6 +2,14 @@
 
 (require 'package)
 
+;; (defun pbpaste ()
+;;   (interactive)
+;;   (call-process-region (point) (if mark-active (mark) (point)) "pbpaste" t t))
+
+(defun new-term-paste ()
+  "Insert the text pasted in an XTerm bracketed paste operation."
+  (interactive)
+  (term-send-raw-string  (shell-command-to-string "pbpaste")))
 
 (define-key isearch-mode-map (kbd "C-o") 'isearch-occur)
 
@@ -339,7 +347,7 @@
 ;;             ))
 
 (global-set-key (kbd "M-w") 'kill-region)
-;;(global-set-key (kbd "M-c") 'kill-ring-save)
+(global-set-key (kbd "M-c") 'kill-ring-save)
 (global-set-key (kbd "M-v") 'yank)
 
 
@@ -362,7 +370,7 @@
 (defun term-send-Mleft  () (interactive) (term-send-raw-string "\eb"))
 (add-hook 'term-load-hook
 	  (lambda ()
-;;;	    (setq term-char-mode-buffer-read-only nil)  ;;; no need
+	 ;;   (setq term-char-mode-buffer-read-only nil)  ;;; no need
 	    (setq term-char-mode-point-at-process-mark nil) ;;; this will make backward-word and forward-word works!!!!
 	    (define-key term-raw-map (kbd "C-<left>") 'awesome-tab-backward-tab)
 	    (define-key term-raw-map (kbd "C-<right>") 'awesome-tab-forward-tab)
@@ -385,7 +393,7 @@
 	    (define-key term-raw-map (kbd "C-c C-z") 'term-kill-subjob)
 	    
 	    (define-key term-raw-map (kbd "M-x") 'helm-M-x)
-	    (define-key term-raw-map (kbd "<xterm-paste>") 'nil) ; ;;;;;; need this, or it will kill this SSH_session
+	    (define-key term-raw-map (kbd "<xterm-paste>") 'new-term-paste)
 	    (define-key term-raw-map (kbd "s-c") 'clipetty-kill-ring-save)
 	    (define-key term-raw-map (kbd "M-v") 'term-paste)
 
