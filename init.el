@@ -2,6 +2,7 @@
 
 (require 'package)
 
+(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
 (run-at-time nil (* 15 60) 'recentf-save-list)
 ;; (defun pbpaste ()
 ;;   (interactive)
@@ -441,12 +442,13 @@
  ;; If there is more than one, they won't work right.
  '(company-auto-commit nil)
  '(flycheck-indication-mode 'left-margin)
+ '(highlight-indent-guides-method 'character)
  '(mouse-drag-and-drop-region 'modifier)
  '(mouse-drag-and-drop-region-cut-when-buffers-differ t)
  '(org-download-image-org-width 300)
  '(org-download-screenshot-method "screencapture -i %s")
  '(package-selected-packages
-   '(clipetty pdf-tools latex-math-preview org-download cdlatex shell-pop multiple-cursors exec-path-from-shell which-key smartparens yasnippet-snippets flycheck-irony ggtags company-irony irony yasnippet rtags cmake-ide company tabbar sr-speedbar spacemacs-theme simpleclip sane-term powerline panda-theme origami neotree minimap markdown-preview-eww markdown-mode+ latex-preview-pane helm flycheck flx-ido elfeed edit-indirect dracula-theme dashboard ctags-update counsel blackboard-theme auto-complete auctex))
+   '(highlight-indent-guides clipetty pdf-tools latex-math-preview org-download cdlatex shell-pop multiple-cursors exec-path-from-shell which-key smartparens yasnippet-snippets flycheck-irony ggtags company-irony irony yasnippet rtags cmake-ide company tabbar sr-speedbar spacemacs-theme simpleclip sane-term powerline panda-theme origami neotree minimap markdown-preview-eww markdown-mode+ latex-preview-pane helm flycheck flx-ido elfeed edit-indirect dracula-theme dashboard ctags-update counsel blackboard-theme auto-complete auctex))
  '(shell-pop-autocd-to-working-dir t)
  '(shell-pop-cleanup-buffer-at-process-exit t)
  '(shell-pop-full-span t)
@@ -821,3 +823,12 @@ Version 2019-01-16"
       (forward-line)
       (setq next-line (point))
       )))
+
+
+
+(setq remote-file-name-inhibit-cache nil)
+(setq vc-ignore-dir-regexp
+      (format "%s\\|%s"
+                    vc-ignore-dir-regexp
+                    tramp-file-name-regexp))
+(setq tramp-verbose 1)
