@@ -2,7 +2,16 @@
 
 (require 'package)
 
-(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+
+;;(require 'treemacs)
+;;(treemacs-tag-follow-mode)
+;;(global-set-key (kbd "C-<tab>") 'treemacs)
+
+(setq lsp-keymap-prefix "C-l")
+(require 'lsp-mode)
+(add-hook 'c++-mode-hook #'lsp)
+
+;;(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
 ;;(add-hook 'prog-mode-hook 'highlight-indentation-mode)
 ;;(setq highlight-indentation-blank-lines t)
 (run-at-time nil (* 15 60) 'recentf-save-list)
@@ -444,14 +453,14 @@
  ;; If there is more than one, they won't work right.
  '(company-auto-commit nil)
  '(flycheck-indication-mode 'left-margin)
- '(highlight-indent-guides-auto-character-face-perc 30)
- '(highlight-indent-guides-method 'character)
+;; '(highlight-indent-guides-auto-character-face-perc 30)
+;; '(highlight-indent-guides-method 'character)
  '(mouse-drag-and-drop-region 'modifier)
  '(mouse-drag-and-drop-region-cut-when-buffers-differ t)
  '(org-download-image-org-width 300)
  '(org-download-screenshot-method "screencapture -i %s")
  '(package-selected-packages
-   '(highlight-indentation irony-eldoc highlight-indent-guides clipetty pdf-tools latex-math-preview org-download cdlatex shell-pop multiple-cursors exec-path-from-shell which-key smartparens yasnippet-snippets flycheck-irony ggtags company-irony irony yasnippet rtags cmake-ide company tabbar sr-speedbar spacemacs-theme simpleclip sane-term powerline panda-theme origami neotree minimap markdown-preview-eww markdown-mode+ latex-preview-pane helm flycheck flx-ido elfeed edit-indirect dracula-theme dashboard ctags-update counsel blackboard-theme auto-complete auctex))
+   '(treemacs lsp-mode irony-eldoc clipetty pdf-tools latex-math-preview org-download cdlatex shell-pop multiple-cursors exec-path-from-shell which-key smartparens yasnippet-snippets flycheck-irony ggtags company-irony irony yasnippet rtags cmake-ide company tabbar sr-speedbar spacemacs-theme simpleclip sane-term powerline panda-theme origami neotree minimap markdown-preview-eww markdown-mode+ latex-preview-pane helm flycheck flx-ido elfeed edit-indirect dracula-theme dashboard ctags-update counsel blackboard-theme auto-complete auctex))
  '(safe-local-variable-values
    '((eval setq cmake-ide-build-dir my-project-path)
      (eval setq cmake-ide-project-dir my-project-path)
@@ -477,7 +486,15 @@
  '(shell-pop-term-shell "/bin/bash")
  '(shell-pop-universal-key "C-a")
  '(shell-pop-window-position "bottom")
- '(sr-speedbar-auto-refresh t))
+ '(sr-speedbar-auto-refresh t)
+ ;; '(treemacs-elisp-imenu-expression nil)
+ ;; '(treemacs-follow-after-init t)
+ ;; '(treemacs-follow-mode t)
+ ;; '(treemacs-position 'right)
+ ;; '(treemacs-recenter-after-file-follow 'always)
+ ;; '(treemacs-recenter-after-tag-follow 'always)
+ ;; '(treemacs-tag-follow-delay 0)
+ )
 (setq speedbar-tag-hierarchy-method nil)
 (eval-after-load "speedbar" '(speedbar-add-supported-extension ".txt"))
 
@@ -525,8 +542,6 @@
 ;;         (company-abbrev company-dabbrev)
 ;;         ))
 (defun my-c++mode-company-hook ()
-  ;;  (ycmd-mode t)
- ;;  (setq company-auto-complete t) ;;; never use this 
   (setq company-minimum-prefix-length 3)
   (setq company-backends
         '((
@@ -539,21 +554,21 @@
 ;	   company-capf
 	   ))))
 (global-set-key (kbd "C-c f") 'company-files)
-(add-hook 'c++-mode-hook 'my-c++mode-company-hook)
+;;(add-hook 'c++-mode-hook 'my-c++mode-company-hook)
 
 ;;;;;irony
-(add-hook 'c++-mode-hook 'irony-mode)
-(add-hook 'c-mode-hook 'irony-mode)
-(add-hook 'objc-mode-hook 'irony-mode)
-(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
-(add-hook 'irony-mode-hook #'irony-eldoc)
+;;(add-hook 'c++-mode-hook 'irony-mode)
+;;(add-hook 'c-mode-hook 'irony-mode)
+;;(add-hook 'objc-mode-hook 'irony-mode)
+;;(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+;;(add-hook 'irony-mode-hook #'irony-eldoc)
 
 ;;(add-to-list 'company-backends 'company-irony-c-headers)
 
 
 
 ;;;;;;;cmake-ide
-(cmake-ide-setup)
+;;(cmake-ide-setup)
 ;;(global-set-key (kbd "C-c c c") 'cmake-ide-compile)
 
 ;;;;;; flycheck
