@@ -6,10 +6,12 @@
 ;;(require 'treemacs)
 ;;(treemacs-tag-follow-mode)
 ;;(global-set-key (kbd "C-<tab>") 'treemacs)
-
-(setq lsp-keymap-prefix "C-l")
-(require 'lsp-mode)
-(add-hook 'c++-mode-hook #'lsp)
+(defun use-lsp()
+  ;;  (setq lsp-clients-clangd-executable "/dune/app/users/mylab/softs/clangd/clangd_10.0.0/bin/clangd")
+  (setq lsp-keymap-prefix "C-l")
+  (require 'lsp-mode)
+  (add-hook 'c++-mode-hook #'lsp)
+  )
 
 ;;(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
 ;;(add-hook 'prog-mode-hook 'highlight-indentation-mode)
@@ -377,7 +379,8 @@
 
 (add-hook 'c++-mode-hook
           (lambda ()
-;;            (hs-minor-mode t)
+	    ;;            (hs-minor-mode t)
+	    (abbrev-mode -1)
             (define-key c-mode-base-map (kbd "C-w") 'hs-toggle-hiding)
 ;;            (define-key c-mode-base-map (kbd "C-c s") 'hs-show-all)
 ;;            (define-key c-mode-base-map (kbd "C-c h") 'hs-hide-all)
@@ -548,28 +551,28 @@
 	   company-irony
 ;	   company-etags
 ;	   company-dabbrev-code
-;	   company-clang
+	   company-clang
 ;	   company-gtags
-	   company-files
-;	   company-capf
+;	   company-files
+	   company-capf
 	   ))))
 (global-set-key (kbd "C-c f") 'company-files)
-;;(add-hook 'c++-mode-hook 'my-c++mode-company-hook)
 
+(defun use-nonlsp()
+
+  (add-hook 'c++-mode-hook 'my-c++mode-company-hook)  
 ;;;;;irony
-;;(add-hook 'c++-mode-hook 'irony-mode)
-;;(add-hook 'c-mode-hook 'irony-mode)
-;;(add-hook 'objc-mode-hook 'irony-mode)
-;;(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
-;;(add-hook 'irony-mode-hook #'irony-eldoc)
-
-;;(add-to-list 'company-backends 'company-irony-c-headers)
-
-
-
+  (add-hook 'c++-mode-hook 'irony-mode)
+  (add-hook 'c-mode-hook 'irony-mode)
+  (add-hook 'objc-mode-hook 'irony-mode)
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+  (add-hook 'irony-mode-hook #'irony-eldoc)
+  ;;(add-to-list 'company-backends 'company-irony-c-headers)
 ;;;;;;;cmake-ide
-;;(cmake-ide-setup)
-;;(global-set-key (kbd "C-c c c") 'cmake-ide-compile)
+  (cmake-ide-setup)
+  (global-set-key (kbd "C-c c c") 'cmake-ide-compile)
+
+  )
 
 ;;;;;; flycheck
 (setq flycheck-global-modes '(not org-mode))
@@ -864,3 +867,9 @@ Version 2019-01-16"
                     vc-ignore-dir-regexp
                     tramp-file-name-regexp))
 (setq tramp-verbose 1)
+
+
+(use-nonlsp)
+;;(use-lsp)
+
+
