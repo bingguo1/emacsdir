@@ -1,6 +1,8 @@
 
 (setq gc-cons-threshold (* 50 1000 1000))
 
+(eval-when-compile
+  (require 'use-package))
 ;;(require 'package)
 
 ;; Use a hook so the message doesn't get clobbered by other messages.
@@ -17,10 +19,15 @@
 ;;(global-set-key (kbd "C-<tab>") 'treemacs)
 (defun use-lsp()
   ;;  (setq lsp-clients-clangd-executable "/dune/app/users/mylab/softs/clangd/clangd_10.0.0/bin/clangd")
-  (setq lsp-keymap-prefix "C-l")
-  (require 'lsp-mode)
-  (add-hook 'c++-mode-hook #'lsp)
-  )
+  (use-package lsp-mode
+    :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+            (c++-mode . lsp)
+            ;; if you want which-key integration
+            (lsp-mode . lsp-enable-which-key-integration))
+    :commands lsp
+    :init
+    (setq lsp-keymap-prefix "C-l")
+  ))
 
 ;;(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
 ;;(add-hook 'prog-mode-hook 'highlight-indentation-mode)
@@ -166,8 +173,12 @@
 
 
 
-(require 'awesome-tab)
-(awesome-tab-mode t)
+					;(require 'awesome-tab)
+					;(awesome-tab-mode t)
+(use-package awesome-tab
+  :config
+  (awesome-tab-mode t))
+
 (when window-system
   (setq awesome-tab-active-bar-height 9)
   (setq awesome-tab-height 100))
@@ -338,18 +349,20 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; helm
 (defun use-helm()
-  (add-to-list 'load-path "~/.emacs.d/download/helm/")
-  (add-to-list 'load-path "~/.emacs.d/elpa/emacs-async/")
-  (require 'helm-config)
-;  (helm-mode 1)  ;;;; <-- donot turn on helm mode everywhere, in ESHELL, helm will mess up the auto-completion
-  (global-set-key (kbd "M-x") 'helm-M-x)
-  (setq helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
-  (global-set-key (kbd "C-x C-f") 'helm-find-files)
-  (global-set-key (kbd "C-x C-r") 'helm-recentf)
-; keep a list of recently opened files                                                                      
-  (recentf-mode 1)
-  (setq recentf-max-saved-items 200)
-  (setq-default recent-save-file "~/.emacs.d/recentf"))
+  (use-package helm
+    :init
+    (setq helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
+    (recentf-mode 1)
+    (setq recentf-max-saved-items 200)
+    (setq-default recent-save-file "~/.emacs.d/recentf")
+    :config
+    (require 'helm-config)
+    :bind (("M-x" . helm-M-x)
+	    ("C-x C-f" . helm-find-files)
+	    ("C-x C-r" .  helm-recentf))
+					;  (helm-mode 1)  ;;;; <-- donot turn on helm mode everywhere, in ESHELL, helm will mess up the auto-completion
+   
+    ))
 
 ;;(use-flx-recentf-smex)
 (use-helm)
@@ -470,7 +483,7 @@
  '(org-download-image-org-width 300)
  '(org-download-screenshot-method "screencapture -i %s")
  '(package-selected-packages
-   '(company-irony-c-headers treemacs lsp-mode irony-eldoc clipetty pdf-tools latex-math-preview org-download cdlatex shell-pop multiple-cursors exec-path-from-shell which-key smartparens yasnippet-snippets flycheck-irony ggtags company-irony irony yasnippet rtags cmake-ide company tabbar sr-speedbar spacemacs-theme simpleclip sane-term powerline panda-theme origami neotree minimap markdown-preview-eww markdown-mode+ latex-preview-pane helm flycheck flx-ido elfeed edit-indirect dracula-theme dashboard ctags-update counsel blackboard-theme auto-complete auctex))
+   '(use-package esup company-irony-c-headers treemacs lsp-mode irony-eldoc clipetty pdf-tools latex-math-preview org-download cdlatex shell-pop multiple-cursors exec-path-from-shell which-key smartparens yasnippet-snippets flycheck-irony ggtags company-irony irony yasnippet rtags cmake-ide company tabbar sr-speedbar spacemacs-theme simpleclip sane-term powerline panda-theme origami neotree minimap markdown-preview-eww markdown-mode+ latex-preview-pane helm flycheck flx-ido elfeed edit-indirect dracula-theme dashboard ctags-update counsel blackboard-theme auto-complete auctex))
  '(safe-local-variable-values
    '((eval setq cmake-ide-build-dir my-project-path)
      (eval setq cmake-ide-project-dir my-project-path)
@@ -514,7 +527,7 @@
 
 
 ;;;;;;;;;;; yas
-(require 'yasnippet)
+;;(require 'yasnippet)
 ;;(yas-reload-all)
 ;;(yas-global-mode 1)
 (add-hook 'c++-mode-hook #'yas-minor-mode)
@@ -531,18 +544,7 @@
    ;;   (define-key company-active-map (kbd ".") 'company--my-insert-dot)
    )
 (setq company-idle-delay 0)
-;;(setq company-minimum-prefix-length 3)
-;;(setq company-auto-complete t)
 ;;(setq company-show-numbers t)
-;; (setq company-backends
-;;       '((company-dabbrev-code
-;; 	 company-clang
-;; 	 company-gtags
-;;          company-capf
-;; 	 company-keywords
-;;          )
-;;         (company-abbrev company-dabbrev)
-;;         ))
 (defun my-c++mode-company-hook ()
   (setq company-minimum-prefix-length 3)
   (setq company-backends
@@ -551,7 +553,7 @@
 ;	   company-irony
 ;	   company-etags
 ;	   company-dabbrev-code
-;	   company-clang
+	   company-clang
 ;	   company-gtags
 ;	   company-files
 	   company-capf
@@ -586,7 +588,10 @@
 ;;;;;;;;;;;;;;;;;; dashboard
 ;;(require 'dashboard)
 (dashboard-setup-startup-hook)
-
+(setq dashboard-items '((recents  . 20)
+                        (bookmarks . 5)
+                        (agenda . 5)
+                        (registers . 5)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;latex latex auctex ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
