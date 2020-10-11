@@ -1,7 +1,16 @@
 
+(setq gc-cons-threshold (* 50 1000 1000))
 
-(require 'package)
+;;(require 'package)
 
+;; Use a hook so the message doesn't get clobbered by other messages.
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message "Emacs ready in %s with %d garbage collections."
+                     (format "%.2f seconds"
+                             (float-time
+                              (time-subtract after-init-time before-init-time)))
+                     gcs-done)))
 
 ;;(require 'treemacs)
 ;;(treemacs-tag-follow-mode)
@@ -91,7 +100,7 @@
 
 (global-set-key (kbd "C-x r") 'find-file-read-only)
 ;; If you want to use latest version
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+;;(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 ;; If you want to use last tagged version
 (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
 (package-initialize)
@@ -269,32 +278,32 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; org ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(require 'org-tempo) ;;;; enable the old way to create a block by < + key + <tab>
-(global-set-key (kbd "C-c o l") 'org-store-link)
-(global-set-key (kbd "C-c o a") 'org-agenda)
-(global-set-key (kbd "C-c o c") 'org-capture)
-(setq org-image-actual-width nil)
-
-(require 'org-download)
-;; Drag-and-drop to `dired`
-(add-hook 'dired-mode-hook 'org-download-enable)
 (with-eval-after-load 'org
+  (require 'org-tempo) ;;;; enable the old way to create a block by < + key + <tab>
+  (global-set-key (kbd "C-c o l") 'org-store-link)
+  (global-set-key (kbd "C-c o a") 'org-agenda)
+  (global-set-key (kbd "C-c o c") 'org-capture)
+  (setq org-image-actual-width nil)
+  
+  (require 'org-download)
+  ;; Drag-and-drop to `dired`
+  (add-hook 'dired-mode-hook 'org-download-enable)
+  (with-eval-after-load 'org
     (org-download-enable))
-
-(unless (string= (user-login-name) "mylab")
-  (setq org-default-notes-file "~/doc_emacs/orgs/tasks.org")
-  (setq org-agenda-files '("~/doc_emacs/orgs/agenda/"))
-)
-
-(require 'ox-latex)
-(add-to-list 'org-latex-classes
-             '("beamer"
-               "\\documentclass\[presentation\]\{beamer\}"
-               ("\\section\{%s\}" . "\\section*\{%s\}")
-               ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
-               ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
-
+  
+  (unless (string= (user-login-name) "mylab")
+    (setq org-default-notes-file "~/doc_emacs/orgs/tasks.org")
+    (setq org-agenda-files '("~/doc_emacs/orgs/agenda/"))
+    )
+  
+  (require 'ox-latex)
+  (add-to-list 'org-latex-classes
+               '("beamer"
+		 "\\documentclass\[presentation\]\{beamer\}"
+		 ("\\section\{%s\}" . "\\section*\{%s\}")
+		 ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
+		 ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
+  )
 
 ;;;;;;;;;;;;;;;  ;;;;;;;;;;;;; flx-ido  ;;;;;;;;;;;;;;;  smex  ;;;;;;;;;;;;;
 (defun ido-recentf-open ()
@@ -351,14 +360,14 @@
 ;;(global-set-key (kbd "C-x C-q") 'save-buffers-kill-terminal)
 
 
-(setq elfeed-feeds
-      '("http://feeds.bbci.co.uk/news/world/rss.xml"
-	"https://www.buzzfeed.com/world.xml"
-	"https://www.vreadtech.com/rss_test.php?uin=obyEs1ftzAphGTsPZr0kNTZkVS8w&key=b9e6709cac6efd338f3808efbddc5fbe"
-	"https://www.vreadtech.com/rss_test.php?uin=obyEs1ftzAphGTsPZr0kNTZkVS8w&key=50f93b198b9e41601df2a044d25368ac"
-	"https://www.reddit.com/r/worldnews/.rss"
-	"http://news.ifeng.com/rss/index.xml"
-	))
+;; (setq elfeed-feeds
+;;       '("http://feeds.bbci.co.uk/news/world/rss.xml"
+;; 	"https://www.buzzfeed.com/world.xml"
+;; 	"https://www.vreadtech.com/rss_test.php?uin=obyEs1ftzAphGTsPZr0kNTZkVS8w&key=b9e6709cac6efd338f3808efbddc5fbe"
+;; 	"https://www.vreadtech.com/rss_test.php?uin=obyEs1ftzAphGTsPZr0kNTZkVS8w&key=50f93b198b9e41601df2a044d25368ac"
+;; 	"https://www.reddit.com/r/worldnews/.rss"
+;; 	"http://news.ifeng.com/rss/index.xml"
+;; 	))
 
 
 ;; (add-hook 'c++-mode-hook
@@ -506,7 +515,7 @@
 
 ;;;;;;;;;;; yas
 (require 'yasnippet)
-(yas-reload-all)
+;;(yas-reload-all)
 ;;(yas-global-mode 1)
 (add-hook 'c++-mode-hook #'yas-minor-mode)
 
@@ -539,13 +548,13 @@
   (setq company-backends
         '((
 	   company-irony-c-headers
-	   company-irony
+;	   company-irony
 ;	   company-etags
 ;	   company-dabbrev-code
-	   company-clang
+;	   company-clang
 ;	   company-gtags
 ;	   company-files
-;	   company-capf
+	   company-capf
 	   ))))
 (global-set-key (kbd "C-c f") 'company-files)
 
@@ -861,7 +870,7 @@ Version 2019-01-16"
 (setq tramp-verbose 1)
 
 
-(use-nonlsp)
-;;(use-lsp)
+;;(use-nonlsp)
+(use-lsp)
 
-
+(setq gc-cons-threshold (* 5 1000 1000))
