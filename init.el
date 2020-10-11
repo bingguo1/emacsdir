@@ -636,7 +636,7 @@
 	    (define-key LaTeX-mode-map (kbd "C-t") 'format-to-latex-table)
 	    
 ))
-(add-hook 'LaTeX-mode-hook 'turn-on-cdlatex)
+;;(add-hook 'LaTeX-mode-hook 'turn-on-cdlatex)
 
 ;;;;;;;;;;;;;;;;;;;;;;; latex-math-preview
 (autoload 'latex-math-preview-expression "latex-math-preview" nil t)
