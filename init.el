@@ -1,23 +1,29 @@
 
+
+(setq use-lsp t)
+
+
+(defvar *emacs-load-start* (current-time))
+(defun anarcat-time-to-ms (time)
+  (+ (* (+ (* (car time) (expt 2 16)) (car (cdr time))) 1000000) (car (cdr (cdr time)))))
+(defun anarcatdisplay-timing ()
+  (interactive)
+  (message ".emacs loaded in %fms" (/ (- (anarcat-time-to-ms (current-time)) (anarcat-time-to-ms *emacs-load-start*)) 1000000.0)))
+
+(message "beginning")
+(anarcatdisplay-timing)
 (setq gc-cons-threshold (* 50 1000 1000))
 
 (eval-when-compile
   (require 'use-package))
 ;;(require 'package)
 
-;; Use a hook so the message doesn't get clobbered by other messages.
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (message "Emacs ready in %s with %d garbage collections."
-                     (format "%.2f seconds"
-                             (float-time
-                              (time-subtract after-init-time before-init-time)))
-                     gcs-done)))
-
 ;;(require 'treemacs)
 ;;(treemacs-tag-follow-mode)
 ;;(global-set-key (kbd "C-<tab>") 'treemacs)
-(defun use-lsp()
+(message "before lsp func")
+(anarcatdisplay-timing)
+(when use-lsp
   ;;  (setq lsp-clients-clangd-executable "/dune/app/users/mylab/softs/clangd/clangd_10.0.0/bin/clangd")
   (use-package lsp-mode
     :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
@@ -29,6 +35,8 @@
     (setq lsp-keymap-prefix "C-l")
   ))
 
+(message "after lsp")
+(anarcatdisplay-timing)
 ;;(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
 ;;(add-hook 'prog-mode-hook 'highlight-indentation-mode)
 ;;(setq highlight-indentation-blank-lines t)
@@ -58,12 +66,12 @@
   (setq right-margin-width 0))
 (add-hook 'prog-mode-hook 'my-set-margins)
 
-(global-clipetty-mode)
-(global-set-key (kbd "s-c") 'clipetty-kill-ring-save)
+(use-package clipetty
+  :hook (after-init . global-clipetty-mode)
+  :bind (("s-c" . clipetty-kill-ring-save))
+  )
 
 
-(if window-system
-    (define-key input-decode-map "\C-i" [C-i])) ;;;; unbound C-i from tab key ;;;; this is okay for window emacs, but iterm emacs will fail to use tab key
 
 (global-set-key (kbd "C-/") 'comment-region)
 (defun get-word-boundary ()
@@ -106,11 +114,14 @@
 (add-hook 'prog-mode-hook 'linum-mode)
 
 (global-set-key (kbd "C-x r") 'find-file-read-only)
+
+(message "before melpa")
+(anarcatdisplay-timing)
 ;; If you want to use latest version
-;;(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 ;; If you want to use last tagged version
 (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
-(package-initialize)
+;;(package-initialize)   ;;;; <-----this takes time to run
 
 
 
@@ -171,17 +182,14 @@
 
   (defun track-mouse (e)))
 
-
+(message "afte mouse")
+(anarcatdisplay-timing)
 
 					;(require 'awesome-tab)
 					;(awesome-tab-mode t)
-(use-package awesome-tab
-  :config
-  (awesome-tab-mode t))
 
-(when window-system
-  (setq awesome-tab-active-bar-height 9)
-  (setq awesome-tab-height 100))
+
+
 (defun my-tabbar-buffer-groups ()
   (list
    (cond
@@ -209,40 +217,46 @@
      "Emacs")
     (t
      "user"))))
-(setq awesome-tab-buffer-groups-function 'my-tabbar-buffer-groups)
-(global-set-key (kbd "C-<left>") 'awesome-tab-backward-tab)
-(global-set-key (kbd "C-<right>") 'awesome-tab-forward-tab)
-(global-set-key (kbd "C-<down>") 'awesome-tab-forward-group)
-(global-set-key (kbd "C-<up>") 'awesome-tab-backward-group)
-(global-set-key (kbd "C-q") 'kill-this-buffer)
-(global-set-key (kbd "C-S-<left>") 'awesome-tab-move-current-tab-to-left)
-(global-set-key (kbd "C-S-<right>") 'awesome-tab-move-current-tab-to-right)
+
+(use-package awesome-tab
+  :init
+  (setq awesome-tab-buffer-groups-function 'my-tabbar-buffer-groups)
+  (when window-system
+    (setq awesome-tab-active-bar-height 9
+	  awesome-tab-height 100))
+  :config
+  (awesome-tab-mode t)
+  :bind (("C-<left>" . awesome-tab-backward-tab)
+	 ("C-<right>" . awesome-tab-forward-tab)
+	 ( "C-<down>" . awesome-tab-forward-group)
+	 ("C-<up>" . awesome-tab-backward-group)
+	 ("C-q" . kill-this-buffer)
+	 ("C-S-<left>" . awesome-tab-move-current-tab-to-left)
+	 ("C-S-<right>" . awesome-tab-move-current-tab-to-right))
+  )
+
 ;;(global-set-key [triple-wheel-left] 'awesome-tab-backward-tab)  ;;; in macbook pro, two fingers left/ right is this, too fast, not going to use
 ;;(global-set-key [triple-wheel-right] 'awesome-tab-forward-tab)
 
 
 (unless window-system (menu-bar-mode -1))
-(when window-system
-  (set-face-attribute 'default nil :font "Monaco-10" )
-;  (setq-default line-spacing 0.1)
-  )
+
 (toggle-scroll-bar -1)
 ;;(ac-config-default)
 (setq compilation-skip-threshold 2)
 (setq-default c-basic-offset 4)
 
 
-
-(defun shell-other-window ()
-  "Open a `shell' in a new window."
-  (interactive)
-  (let ((buf (shell)))
-    (switch-to-buffer (other-buffer buf))
-    (switch-to-buffer-other-window buf)))
-(defun unique-shell ()
-  (interactive)
-  (call-interactively 'shell)
-  (rename-uniquely))
+;; (defun shell-other-window ()
+;;   "Open a `shell' in a new window."
+;;   (interactive)
+;;   (let ((buf (shell)))
+;;     (switch-to-buffer (other-buffer buf))
+;;     (switch-to-buffer-other-window buf)))
+;; (defun unique-shell ()
+;;   (interactive)
+;;   (call-interactively 'shell)
+;;   (rename-uniquely))
 
 ;;(global-set-key (kbd "C-d") 'unique-shell)
 (defun unique-term ()
@@ -287,7 +301,8 @@
 
 
 
-
+(message "afte add eshell mode hook")
+(anarcatdisplay-timing)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; org ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (with-eval-after-load 'org
   (require 'org-tempo) ;;;; enable the old way to create a block by < + key + <tab>
@@ -316,6 +331,8 @@
 		 ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
   )
 
+(message "before ido")
+(anarcatdisplay-timing)
 ;;;;;;;;;;;;;;;  ;;;;;;;;;;;;; flx-ido  ;;;;;;;;;;;;;;;  smex  ;;;;;;;;;;;;;
 (defun ido-recentf-open ()
   "Use `ido-completing-read' to find a recent file."
@@ -345,21 +362,24 @@
   ;; This is your old M-x.
   (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 )
-
+(message "before helm")
+(anarcatdisplay-timing)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; helm
 (defun use-helm()
   (use-package helm
+    :defer 0.1
     :init
-    (setq helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
+    (setq-default recent-save-file "~/.emacs.d/recentf")
     (recentf-mode 1)
     (setq recentf-max-saved-items 200)
-    (setq-default recent-save-file "~/.emacs.d/recentf")
-    :config
-    (require 'helm-config)
     :bind (("M-x" . helm-M-x)
-	    ("C-x C-f" . helm-find-files)
-	    ("C-x C-r" .  helm-recentf))
+	   ("C-x C-f" . helm-find-files)
+	   ("C-x C-r" .  helm-recentf))
+    :config
+    (message "load helm now")
+    (setq helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
+    (require 'helm-config)   
 					;  (helm-mode 1)  ;;;; <-- donot turn on helm mode everywhere, in ESHELL, helm will mess up the auto-completion
    
     ))
@@ -367,10 +387,8 @@
 ;;(use-flx-recentf-smex)
 (use-helm)
 
-
-
-;;(global-unset-key (kbd "C-x C-c"))
-;;(global-set-key (kbd "C-x C-q") 'save-buffers-kill-terminal)
+(message "after helm")
+(anarcatdisplay-timing)
 
 
 ;; (setq elfeed-feeds
@@ -383,13 +401,7 @@
 ;; 	))
 
 
-;; (add-hook 'c++-mode-hook
-;;           (lambda ()
-;; 	    (hs-minor-mode)
-;; 	    (define-key c-mode-base-map (kbd "C-a") 'hs-toggle-hiding)
-;; 	    (define-key c-mode-base-map (kbd "C-p") 'hs-show-all)
-;; 	    (define-key c-mode-base-map (kbd "C-o") 'hs-hide-all)
-;;             ))
+
 (global-set-key (kbd "s-x") 'kill-region)
 (global-set-key (kbd "M-w") 'kill-region)
 (global-set-key (kbd "M-c") 'kill-ring-save)
@@ -406,7 +418,7 @@
             (define-key c-mode-base-map (kbd "C-w") 'hs-toggle-hiding)
 ;;            (define-key c-mode-base-map (kbd "C-c s") 'hs-show-all)
 ;;            (define-key c-mode-base-map (kbd "C-c h") 'hs-hide-all)
-	    (define-key c-mode-base-map (kbd "S-<mouse-1>") 'ggtags-find-tag-mouse)
+;;	    (define-key c-mode-base-map (kbd "S-<mouse-1>") 'ggtags-find-tag-mouse)
             ))
 
 
@@ -469,14 +481,58 @@
 
 (global-set-key (kbd "s-u") 'revert-buffer)
 
-(require 'sr-speedbar)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; speedbar  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun sb-toggle-expansion-curren-file ()
+   "Expand current file in speedbar buffer"  
+   (interactive)                                                                                                                               
+   (setq current-file (buffer-file-name))
+   (sr-speedbar-refresh)
+;;   (switch-to-buffer-other-frame "*SPEEDBAR*")  ;;; this link will split the other buffer to two 
+   (speedbar-find-selected-file current-file)
+   (speedbar-toggle-line-expansion))
+
+(use-package sr-speedbar
+  :init
+  (setq sr-speedbar-auto-refresh t
+	speedbar-tag-hierarchy-method nil)  
+  :config
+  (speedbar-add-supported-extension ".txt")
+  :bind (("C-f" . sr-speedbar-refresh-toggle)
+	 ("C-1" . sb-toggle-expansion-curren-file)
+	 ("C-<tab>" . sr-speedbar-toggle)
+	 )
+
+  )
+  
+
 ;;(custom-set-variables '(sr-speedbar-right-side nil) '(sr-speedbar-skip-other-window-p t) '(sr-speedbar-max-width 20) '(sr-speedbar-width-x 10))
+(message "before custom set var")
+(anarcatdisplay-timing)
+
+(use-package shell-pop
+  :init
+  (setq shell-pop-autocd-to-working-dir t
+	shell-pop-cleanup-buffer-at-process-exit t
+	shell-pop-full-span t
+	shell-pop-restore-window-configuration t
+	shell-pop-shell-type
+	'("ansi-term" "*ansi*"
+	  (lambda nil
+	    (ansi-term shell-pop-term-shell)))
+	shell-pop-term-shell "/bin/bash"
+	shell-pop-universal-key "C-a"
+	shell-pop-window-position "bottom")
+  )
+
+
+
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(company-auto-commit nil)
  '(flycheck-indication-mode 'left-margin)
  '(mouse-drag-and-drop-region 'modifier)
  '(mouse-drag-and-drop-region-cut-when-buffers-differ t)
@@ -497,33 +553,7 @@
 	      (if
 		  (stringp d)
 		  d
-		(car d)))))))
- '(shell-pop-autocd-to-working-dir t)
- '(shell-pop-cleanup-buffer-at-process-exit t)
- '(shell-pop-full-span t)
- '(shell-pop-restore-window-configuration t)
- '(shell-pop-shell-type
-   '("ansi-term" "*ansi*"
-     (lambda nil
-       (ansi-term shell-pop-term-shell))))
- '(shell-pop-term-shell "/bin/bash")
- '(shell-pop-universal-key "C-a")
- '(shell-pop-window-position "bottom")
- '(sr-speedbar-auto-refresh t))
-(setq speedbar-tag-hierarchy-method nil)
-(eval-after-load "speedbar" '(speedbar-add-supported-extension ".txt"))
-
-(global-set-key (kbd "C-f") 'sr-speedbar-refresh-toggle)
- (defun sb-toggle-expansion-curren-file ()
-   "Expand current file in speedbar buffer"  
-   (interactive)                                                                                                                               
-   (setq current-file (buffer-file-name))
-   (sr-speedbar-refresh)
-;;   (switch-to-buffer-other-frame "*SPEEDBAR*")  ;;; this link will split the other buffer to two 
-   (speedbar-find-selected-file current-file)
-   (speedbar-toggle-line-expansion))
-(global-set-key (kbd "C-1") 'sb-toggle-expansion-curren-file)
-(global-set-key (kbd "C-<tab>") 'sr-speedbar-toggle)
+		(car d))))))))
 
 
 ;;;;;;;;;;; yas
@@ -532,21 +562,25 @@
 ;;(yas-global-mode 1)
 (add-hook 'c++-mode-hook #'yas-minor-mode)
 
+(message "after yas-minor")
+(anarcatdisplay-timing)
 
+(use-package company
+  :init
+  (setq company-idle-delay nil  ; avoid auto completion popup, use TAB
+					; to show it
+	company-auto-commit nil
+        company-tooltip-align-annotations nil
+	company-minimum-prefix-length 3)
+  :hook (after-init . global-company-mode)
+  :bind (("C-c f" . company-files)
+	 :map company-active-map
+	 ("q" . company-abort)
+	 ))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;company 
-(add-hook 'after-init-hook 'global-company-mode)
-(with-eval-after-load 'company
-;;  (defun company--my-insert-spc() (interactive) (company-abort)(insert-char #10r32))
-;;   (defun company--my-insert-dot() (interactive) (company-abort)(insert-char #10r46))
-   (define-key company-active-map (kbd "q") 'company-abort)
-;;   (define-key company-active-map (kbd "SPC") 'company--my-insert-spc)
-   ;;   (define-key company-active-map (kbd ".") 'company--my-insert-dot)
-   )
-(setq company-idle-delay 0)
-;;(setq company-show-numbers t)
+  
+  
 (defun my-c++mode-company-hook ()
-  (setq company-minimum-prefix-length 3)
   (setq company-backends
         '((
 	   company-irony-c-headers
@@ -558,9 +592,9 @@
 ;	   company-files
 	   company-capf
 	   ))))
-(global-set-key (kbd "C-c f") 'company-files)
 
-(defun use-nonlsp()
+
+(unless use-lsp
 ;;;;;irony
  (add-hook 'c++-mode-hook 'irony-mode)
  (add-hook 'c-mode-hook 'irony-mode)
@@ -584,87 +618,25 @@
 (global-set-key (kbd "C-c <up>") 'flycheck-previous-error)
 (global-set-key (kbd "C-c <down>") 'flycheck-next-error)
 
+(message "after c++")
+(anarcatdisplay-timing)
 
 ;;;;;;;;;;;;;;;;;; dashboard
-;;(require 'dashboard)
-(dashboard-setup-startup-hook)
-(setq dashboard-items '((recents  . 20)
-                        (bookmarks . 5)
-                        (agenda . 5)
-                        (registers . 5)))
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;latex latex auctex ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize))
-
-(defun LaTeX-save-and-compile (arg)
-  "Once you click save, it will run tex command run all."  
-  (interactive "P")
-  (save-buffer)
-  (TeX-command-run-all arg)
-  )
-
-;; (setenv "PATH" (concat "/Library/TeX/texbin:""/usr/local/opt:"
-;;                      (getenv "PATH")))
-;; (add-to-list 'exec-path "/Library/TeX/texbin")
-;; (add-to-list 'exec-path "/usr/local/opt")
-;;(setq-default TeX-master nil)
-(add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
-(add-hook 'LaTeX-mode-hook
-	  (lambda ()
-
-	    (yas-minor-mode)
-	    (setq company-minimum-prefix-length 4)
-	    (flyspell-mode)
-
-	    (setq TeX-auto-save t)
-	    (setq TeX-parse-self t)
-	    ;;(setq-default TeX-master nil) ;; enable only when working with multiple file system
-	    (setq TeX-PDF-mode t)
-	    ;;	    (latex-preview-pane-enable)
-	    (setq doc-view-continuous t) ;;;; so the pdf on my preview-pane can scroll continuously	    
-	    ;;	    (pdf-tools-install)
-	    (pdf-loader-install)
-	    (setq TeX-view-program-selection '((output-pdf "pdf-tools"))
-		  TeX-source-correlate-start-server t)
-	    (setq TeX-view-program-list '(("pdf-tools" "TeX-pdf-tools-sync-view")))
-	    ;;;;;;;; when you are pressing mouse, it's down-mouse, when finish it, it's mouse-1, so down-mouse work before mouse
-	    (define-key LaTeX-mode-map (kbd "C-<mouse-1>") 'pdf-sync-forward-search)
-	    (define-key LaTeX-mode-map (kbd "C-<down-mouse-1>") 'mouse-set-point)
-	    (define-key LaTeX-mode-map (kbd "C-x C-s") 'LaTeX-save-and-compile)
-	    (set (make-variable-buffer-local 'TeX-electric-math)
-		 (cons "$" "$"))
-
-	    (add-to-list 'TeX-command-list
-			 '("latexmk" "latexmk -pdflatex='pdflatex -file-line-error -synctex=1' -pdf %s"
-			   TeX-run-command nil t :help "Run latexmk") t)
-	    (LaTeX-math-mode)
-	    (setq LaTeX-electric-left-right-brace t)
-	    (setq LaTeX-command-style  '(("" "%(PDF)%(latex) -shell-escape --synctex=1 %(file-line-error) %(extraopts) %S%(PDFout)")))
-	    (setq TeX-source-correlate-method 'synctex)
-	    (setq TeX-source-correlate-mode t)
-	    (setq TeX-source-correlate-start-server t)
-	    (define-key LaTeX-mode-map [C-i] 'latex-math-preview-insert-symbol)
-	    (define-key LaTeX-mode-map (kbd "C-e") 'latex-math-preview-expression)
-	    (define-key LaTeX-mode-map (kbd "C-t") 'format-to-latex-table)
-	    
-))
-;;(add-hook 'LaTeX-mode-hook 'turn-on-cdlatex)
-
-;;;;;;;;;;;;;;;;;;;;;;; latex-math-preview
-(autoload 'latex-math-preview-expression "latex-math-preview" nil t)
-(autoload 'latex-math-preview-insert-symbol "latex-math-preview" nil t)
-(autoload 'latex-math-preview-save-image-file "latex-math-preview" nil t)
-(autoload 'latex-math-preview-beamer-frame "latex-math-preview" nil t)
-(setq latex-math-preview-image-foreground-color "#ccffcc")
-
+(use-package dashboard
+  :init
+  (setq dashboard-items '((recents  . 20)
+                     (bookmarks . 5)
+                     (agenda . 5)
+                     (registers . 5)))
+  :config
+  (dashboard-setup-startup-hook))
 
 
 
 ;(setq custom-file "~/.emacs.d/custom.el")
 ;(load custom-file)
-
+(message "after dashboard")
+(anarcatdisplay-timing)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; gdb  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq gdb-many-windows t)
@@ -709,7 +681,8 @@
    kept-old-versions 1
    version-control t)       ; use versioned backups
 
-
+(message "before xah")
+(anarcatdisplay-timing)
 
 (global-set-key (kbd "C-c m c") 'mc/edit-lines)
 
@@ -789,7 +762,8 @@ Version 2019-01-16"
 (global-set-key (kbd "S-<mouse-1>")  'xah-open-file-at-cursor)
 
 
-
+(message "after xah")
+(anarcatdisplay-timing)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -805,21 +779,26 @@ Version 2019-01-16"
 (load-theme 'monokai t)
 
 ;;;;;;;;; ESHELL prompt
-(defun with-face (str &rest face-plist)
-  (propertize str 'face face-plist))
+;; (defun with-face (str &rest face-plist)
+;;   (propertize str 'face face-plist))
 
-(defun shk-eshell-prompt ()
-  (let ((header-bg "#fff"))
-    (concat
-     (with-face (format-time-string "(%Y-%m-%d %H:%M)" (current-time)) :foreground "#ff8000")
-     (with-face (concat (eshell/pwd) "") :foreground "#00b3b3")
-     "$ ")))
-(setq eshell-prompt-function 'shk-eshell-prompt)
-(setq eshell-highlight-prompt nil)
+;; (defun shk-eshell-prompt ()
+;;   (let ((header-bg "#fff"))
+;;     (concat
+;;      (with-face (format-time-string "(%Y-%m-%d %H:%M)" (current-time)) :foreground "#ff8000")
+;;      (with-face (concat (eshell/pwd) "") :foreground "#00b3b3")
+;;      "$ ")))
+;; (setq eshell-prompt-function 'shk-eshell-prompt)
+;; (setq eshell-highlight-prompt nil)
 
 
-;;; '(term-char-mode-buffer-read-only nil))
-
+(use-package highlight-indent-guides
+  :init
+  (setq highlight-indent-guides-auto-character-face-perc 30
+	highlight-indent-guides-method 'character)
+  :hook (prog-mode . highlight-indent-guides-mode)
+  )
+  
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -832,50 +811,26 @@ Version 2019-01-16"
 
 
 
+(message "after latex table")
+(anarcatdisplay-timing)
 
-;;;;;;;;;;;;;;;;;;;;;; latex format table
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; tramp ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; (setq remote-file-name-inhibit-cache nil)
+;; (setq vc-ignore-dir-regexp
+;;       (format "%s\\|%s"
+;;                     vc-ignore-dir-regexp
+;;                     tramp-file-name-regexp))
+;; (setq tramp-verbose 1)
+(when window-system
+  (set-face-attribute 'default nil :font "Monaco-10" )
+  (load-file "latex.el")
+  (define-key input-decode-map "\C-i" [C-i])) ;;;; unbound C-i from tab key ;;;; this is okay for window emacs, but iterm emacs will fail to use tab key
 
-(defun format-to-latex-table (top bottom)                                                                          
-  "format a simple table to latex format."                                                                          
-  (interactive "r")
-
-  (let ((end bottom) 
-        char next-line)
-    (goto-char top)
-    (deactivate-mark)
-    (if (not (bolp))
-        (forward-line 1))
-    (setq next-line (point))
-    (while (< next-line bottom)
-      (forward-char)
-      (while (not (eolp))
-        (while (and (not (string= " " (string (char-after)))) (not (string= "\t" (string (char-after)))) (not (eolp)))
-	  (if (string= "%" (string (char-after)))
-	      (insert "\\"))
-          (forward-char)
-          )          
-        (if (not (eolp))
-	    (progn 
-              (insert "&")
-	      (forward-word))	      
-	  )
-        )          
-      (insert "\\\\")
-      (forward-line)
-      (setq next-line (point))
-      )))
-
-
-
-(setq remote-file-name-inhibit-cache nil)
-(setq vc-ignore-dir-regexp
-      (format "%s\\|%s"
-                    vc-ignore-dir-regexp
-                    tramp-file-name-regexp))
-(setq tramp-verbose 1)
-
-
-;;(use-nonlsp)
-(use-lsp)
 
 (setq gc-cons-threshold (* 5 1000 1000))
+
+(message "end----")
+(anarcatdisplay-timing)
+
+
+
