@@ -61,6 +61,8 @@
 
 
 (global-set-key (kbd "C-/") 'comment-region)
+
+
 (defun get-word-boundary ()
   "Return the boundary of the current word.
          The return value is of the form: (cons pos1 pos2).
@@ -86,10 +88,6 @@
     (goto-char (cdr bds))
     )
   )
-
-
-
-
 (global-set-key [double-mouse-1] 'select-word)
 
 
@@ -543,7 +541,17 @@
 ;;(require 'yasnippet)
 ;;(yas-reload-all)
 ;;(yas-global-mode 1)
-(add-hook 'c++-mode-hook #'yas-minor-mode)
+(use-package yasnippet
+  :hook (c++-mode . yas-minor-mode)
+  :bind
+  (:map yas-minor-mode-map
+        ("C-c y t" . yas-describe-tables)  ;; learn from https://lupan.pl/dotemacs/
+;        ("C-c & &" . org-mark-ring-goto)
+	))
+
+(use-package yasnippet-snippets
+  :defer)
+;;(add-hook 'c++-mode-hook #'yas-minor-mode)
 
 (message "after yas-minor")
 (anarcatdisplay-timing)
@@ -822,10 +830,10 @@ Version 2019-01-16"
             ;; if you want which-key integration
             (lsp-mode . lsp-enable-which-key-integration))
     :commands lsp
+    :defer 0.5
     :init
     (setq lsp-keymap-prefix "C-l")
-    :config
-    (require 'dap-gdb-lldb)
+;    :config    (require 'dap-gdb-lldb)
     :bind (:map lsp-mode-map
 		("M-<down-mouse-1>" . mouse-set-point)
 		("M-<mouse-1>" . lsp-find-definition-mouse)
@@ -837,7 +845,3 @@ Version 2019-01-16"
 
 (message "end----")
 (anarcatdisplay-timing)
-
-
-
-
