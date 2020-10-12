@@ -12,7 +12,9 @@
 
 (message "beginning")
 (anarcatdisplay-timing)
-(setq gc-cons-threshold (* 50 1000 1000))
+(setq gc-cons-threshold (* 50 1024 1024)
+      read-process-output-max (* 1024 1024)
+      )
 
 (eval-when-compile
   (require 'use-package))
@@ -21,22 +23,7 @@
 ;;(require 'treemacs)
 ;;(treemacs-tag-follow-mode)
 ;;(global-set-key (kbd "C-<tab>") 'treemacs)
-(message "before lsp func")
-(anarcatdisplay-timing)
-(when use-lsp
-  ;;  (setq lsp-clients-clangd-executable "/dune/app/users/mylab/softs/clangd/clangd_10.0.0/bin/clangd")
-  (use-package lsp-mode
-    :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-            (c++-mode . lsp)
-            ;; if you want which-key integration
-            (lsp-mode . lsp-enable-which-key-integration))
-    :commands lsp
-    :init
-    (setq lsp-keymap-prefix "C-l")
-  ))
 
-(message "after lsp")
-(anarcatdisplay-timing)
 ;;(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
 ;;(add-hook 'prog-mode-hook 'highlight-indentation-mode)
 ;;(setq highlight-indentation-blank-lines t)
@@ -184,10 +171,6 @@
 
 (message "afte mouse")
 (anarcatdisplay-timing)
-
-					;(require 'awesome-tab)
-					;(awesome-tab-mode t)
-
 
 
 (defun my-tabbar-buffer-groups ()
@@ -539,7 +522,7 @@
  '(org-download-image-org-width 300)
  '(org-download-screenshot-method "screencapture -i %s")
  '(package-selected-packages
-   '(use-package esup company-irony-c-headers treemacs lsp-mode irony-eldoc clipetty pdf-tools latex-math-preview org-download cdlatex shell-pop multiple-cursors exec-path-from-shell which-key smartparens yasnippet-snippets flycheck-irony ggtags company-irony irony yasnippet rtags cmake-ide company tabbar sr-speedbar spacemacs-theme simpleclip sane-term powerline panda-theme origami neotree minimap markdown-preview-eww markdown-mode+ latex-preview-pane helm flycheck flx-ido elfeed edit-indirect dracula-theme dashboard ctags-update counsel blackboard-theme auto-complete auctex))
+   '(dap-mode use-package esup company-irony-c-headers treemacs lsp-mode irony-eldoc clipetty pdf-tools latex-math-preview org-download cdlatex shell-pop multiple-cursors exec-path-from-shell which-key smartparens yasnippet-snippets flycheck-irony ggtags company-irony irony yasnippet rtags cmake-ide company tabbar sr-speedbar spacemacs-theme simpleclip sane-term powerline panda-theme origami neotree minimap markdown-preview-eww markdown-mode+ latex-preview-pane helm flycheck flx-ido elfeed edit-indirect dracula-theme dashboard ctags-update counsel blackboard-theme auto-complete auctex))
  '(safe-local-variable-values
    '((eval setq cmake-ide-build-dir my-project-path)
      (eval setq cmake-ide-project-dir my-project-path)
@@ -567,7 +550,7 @@
 
 (use-package company
   :init
-  (setq company-idle-delay nil  ; avoid auto completion popup, use TAB
+  (setq company-idle-delay 0  ; avoid auto completion popup, use TAB
 					; to show it
 	company-auto-commit nil
         company-tooltip-align-annotations nil
@@ -597,14 +580,14 @@
 	   company-capf
 	   ))))
 ;;;;;irony  
- (add-hook 'c++-mode-hook 'irony-mode)
- (add-hook 'c-mode-hook 'irony-mode)
- (add-hook 'objc-mode-hook 'irony-mode)
- (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
- (add-hook 'irony-mode-hook #'irony-eldoc)
- 
+  (add-hook 'c++-mode-hook 'irony-mode)
+  (add-hook 'c-mode-hook 'irony-mode)
+  (add-hook 'objc-mode-hook 'irony-mode)
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+  (add-hook 'irony-mode-hook #'irony-eldoc)
+  
   (add-hook 'c++-mode-hook 'my-c++mode-company-hook)  
-
+  
   ;;(add-to-list 'company-backends 'company-irony-c-headers)
 ;;;;;;;cmake-ide
   (cmake-ide-setup)
@@ -827,11 +810,34 @@ Version 2019-01-16"
   (load-file "latex.el")
   (define-key input-decode-map "\C-i" [C-i])) ;;;; unbound C-i from tab key ;;;; this is okay for window emacs, but iterm emacs will fail to use tab key
 
+(use-package which-key
+  :config
+  (which-key-mode))
 
-(setq gc-cons-threshold (* 5 1000 1000))
+(when use-lsp
+  ;;  (setq lsp-clients-clangd-executable "/dune/app/users/mylab/softs/clangd/clangd_10.0.0/bin/clangd")
+  (use-package lsp-mode
+    :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+            (c++-mode . lsp)
+            ;; if you want which-key integration
+            (lsp-mode . lsp-enable-which-key-integration))
+    :commands lsp
+    :init
+    (setq lsp-keymap-prefix "C-l")
+    :config
+    (require 'dap-gdb-lldb)
+    :bind (:map lsp-mode-map
+		("M-<down-mouse-1>" . mouse-set-point)
+		("M-<mouse-1>" . lsp-find-definition-mouse)
+		("M-." . lsp-find-definition)
+		("M-/" . lsp-find-references))
+))
+
+
 
 (message "end----")
 (anarcatdisplay-timing)
+
 
 
 
