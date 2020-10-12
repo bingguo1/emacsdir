@@ -580,10 +580,14 @@
 
   
   
-(defun my-c++mode-company-hook ()
-  (setq company-backends
-        '((
-	   company-irony-c-headers
+
+
+
+(unless use-lsp
+  (defun my-c++mode-company-hook ()
+    (setq company-backends
+          '((
+	     company-irony-c-headers
 ;	   company-irony
 ;	   company-etags
 ;	   company-dabbrev-code
@@ -592,10 +596,7 @@
 ;	   company-files
 	   company-capf
 	   ))))
-
-
-(unless use-lsp
-;;;;;irony
+;;;;;irony  
  (add-hook 'c++-mode-hook 'irony-mode)
  (add-hook 'c-mode-hook 'irony-mode)
  (add-hook 'objc-mode-hook 'irony-mode)
