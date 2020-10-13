@@ -20,9 +20,11 @@
   (require 'use-package))
 ;;(require 'package)
 
-;;(require 'treemacs)
-;;(treemacs-tag-follow-mode)
-;;(global-set-key (kbd "C-<tab>") 'treemacs)
+;; (require 'treemacs)
+;; (treemacs-tag-follow-mode)
+;; (treemacs-follow-mode t)
+;; (setq treemacs-follow-after-init t)
+;; (global-set-key (kbd "C-<tab>") 'treemacs)
 
 ;;(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
 ;;(add-hook 'prog-mode-hook 'highlight-indentation-mode)
@@ -60,12 +62,9 @@
 
 
 
-(global-set-key (kbd "C-/") 'comment-region)
-
-
 (add-hook 'prog-mode-hook 'linum-mode)
 
-(global-set-key (kbd "C-x r") 'find-file-read-only)
+
 
 (message "before melpa")
 (anarcatdisplay-timing)
@@ -166,21 +165,22 @@
     (t
      "user"))))
 
+
 (use-package awesome-tab
   :init
   (setq awesome-tab-buffer-groups-function 'my-tabbar-buffer-groups)
   (when window-system
     (setq awesome-tab-active-bar-height 9
 	  awesome-tab-height 100))
-  :config
-  (awesome-tab-mode t)
-  :bind (("C-<left>" . awesome-tab-backward-tab)
+   :bind (("C-<left>" . awesome-tab-backward-tab)
 	 ("C-<right>" . awesome-tab-forward-tab)
 	 ( "C-<down>" . awesome-tab-forward-group)
 	 ("C-<up>" . awesome-tab-backward-group)
 	 ("C-q" . kill-this-buffer)
 	 ("C-S-<left>" . awesome-tab-move-current-tab-to-left)
 	 ("C-S-<right>" . awesome-tab-move-current-tab-to-right))
+   :config
+   (awesome-tab-mode t)
   )
 
 ;;(global-set-key [triple-wheel-left] 'awesome-tab-backward-tab)  ;;; in macbook pro, two fingers left/ right is this, too fast, not going to use
@@ -359,6 +359,19 @@
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 (add-to-list 'auto-mode-alist '("\\.C\\'" . c++-mode))
 
+(fset 'yes-or-no-p 'y-or-n-p)
+
+(global-set-key (kbd "C-c k") #'compile)
+(global-set-key (kbd "C-c r") #'recompile)
+(global-set-key (kbd "s-u") 'revert-buffer)
+(global-set-key (kbd "C-c m c") 'mc/edit-lines)
+;;;;;;;;;;;;option + mouse cannot be defined in terminal emacs, cmd+mouse is intercepted by iterm2, ctrl + mouse is predefined in window emacs, so only left S+mouse choice
+(global-set-key (kbd "S-<down-mouse-1>")  'mouse-set-point)
+(global-set-key (kbd "S-<mouse-1>")  'xah-open-file-at-cursor)
+
+(global-set-key (kbd "C-/") 'comment-region)
+(global-set-key (kbd "C-x r") 'find-file-read-only)
+
 (add-hook 'c++-mode-hook
           (lambda ()
 	    ;;            (hs-minor-mode t)
@@ -427,7 +440,7 @@
     (define-key map "\e[1;C/" (kbd "C-/"))
     ))
 
-(global-set-key (kbd "s-u") 'revert-buffer)
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; speedbar  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -643,7 +656,7 @@
 (message "before xah")
 (anarcatdisplay-timing)
 
-(global-set-key (kbd "C-c m c") 'mc/edit-lines)
+
 
 
 (defun xah-open-file-at-cursor ()
@@ -716,9 +729,7 @@ Version 2019-01-16"
               (find-file $path ))))))))
 
 
-;;;;;;;;;;;;option + mouse cannot be defined in terminal emacs, cmd+mouse is intercepted by iterm2, ctrl + mouse is predefined in window emacs, so only left S+mouse choice
-(global-set-key (kbd "S-<down-mouse-1>")  'mouse-set-point)
-(global-set-key (kbd "S-<mouse-1>")  'xah-open-file-at-cursor)
+
 
 
 (message "after xah")
