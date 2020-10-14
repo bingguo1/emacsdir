@@ -497,6 +497,7 @@
  '(flycheck-indication-mode 'left-margin)
  '(mouse-drag-and-drop-region 'modifier)
  '(mouse-drag-and-drop-region-cut-when-buffers-differ t)
+ '(mouse-highlight nil)
  '(org-download-image-org-width 300)
  '(org-download-screenshot-method "screencapture -i %s")
  '(package-selected-packages
@@ -514,7 +515,8 @@
 	      (if
 		  (stringp d)
 		  d
-		(car d))))))))
+		(car d)))))))
+ '(speedbar-tag-hierarchy-method '(speedbar-trim-words-tag-hierarchy)))
 
 
 ;;;;;;;;;;; yas
@@ -810,7 +812,11 @@ Version 2019-01-16"
     :commands lsp
     :defer 0.5
     :init
-    (setq lsp-keymap-prefix "C-l")
+    (setq lsp-keymap-prefix "M-l"
+	  lsp-enable-imenu nil ;; if true, this will mess up the sr-speedbar imenu 
+	  lsp-enable-indentation nil
+	  lsp-enable-on-type-formatting nil
+	  )
 ;    :config    (require 'dap-gdb-lldb)
     :bind (:map lsp-mode-map
 		("M-<down-mouse-1>" . mouse-set-point)
@@ -906,3 +912,13 @@ If MODE is 2 then do the same for lines."
 		 (goto-char end)
 		 (forward-line 1)
 		 (point))))))
+
+
+(with-eval-after-load 'sr-speedbar
+  (advice-add 'sr-speedbar-open :after
+              #'(lambda ()
+                  ;; Remove weird sr-speedbar hooks
+                  (remove-hook 'speedbar-before-visiting-file-hook #'sr-speedbar-before-visiting-file-hook)
+                  (remove-hook 'speedbar-before-visiting-tag-hook #'sr-speedbar-before-visiting-tag-hook)
+                  (remove-hook 'speedbar-visiting-file-hook #'sr-speedbar-visiting-file-hook)
+                  (remove-hook 'speedbar-visiting-tag-hook #'sr-speedbar-visiting-tag-hook))))
