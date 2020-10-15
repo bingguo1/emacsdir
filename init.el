@@ -1,17 +1,17 @@
 
 
 (setq use-lsp t)
+(setq use-helm t)
 
+;; (defvar *emacs-load-start* (current-time))
+;; (defun anarcat-time-to-ms (time)
+;;   (+ (* (+ (* (car time) (expt 2 16)) (car (cdr time))) 1000000) (car (cdr (cdr time)))))
+;; (defun anarcatdisplay-timing ()
+;;   (interactive)
+;;   (message ".emacs loaded in %fms" (/ (- (anarcat-time-to-ms (current-time)) (anarcat-time-to-ms *emacs-load-start*)) 1000000.0)))
+;; (message "beginning")
+;; (anarcatdisplay-timing)
 
-(defvar *emacs-load-start* (current-time))
-(defun anarcat-time-to-ms (time)
-  (+ (* (+ (* (car time) (expt 2 16)) (car (cdr time))) 1000000) (car (cdr (cdr time)))))
-(defun anarcatdisplay-timing ()
-  (interactive)
-  (message ".emacs loaded in %fms" (/ (- (anarcat-time-to-ms (current-time)) (anarcat-time-to-ms *emacs-load-start*)) 1000000.0)))
-
-(message "beginning")
-(anarcatdisplay-timing)
 (setq gc-cons-threshold (* 50 1024 1024)
       read-process-output-max (* 1024 1024)
       )
@@ -66,8 +66,6 @@
 
 
 
-(message "before melpa")
-(anarcatdisplay-timing)
 ;; If you want to use latest version
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 ;; If you want to use last tagged version
@@ -133,8 +131,6 @@
 
   (defun track-mouse (e)))
 
-(message "afte mouse")
-(anarcatdisplay-timing)
 
 
 (defun my-tabbar-buffer-groups ()
@@ -248,9 +244,6 @@
             ))
 
 
-
-(message "afte add eshell mode hook")
-(anarcatdisplay-timing)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; org ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (with-eval-after-load 'org
   (require 'org-tempo) ;;;; enable the old way to create a block by < + key + <tab>
@@ -279,8 +272,6 @@
 		 ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
   )
 
-(message "before ido")
-(anarcatdisplay-timing)
 ;;;;;;;;;;;;;;;  ;;;;;;;;;;;;; flx-ido  ;;;;;;;;;;;;;;;  smex  ;;;;;;;;;;;;;
 (defun ido-recentf-open ()
   "Use `ido-completing-read' to find a recent file."
@@ -288,7 +279,7 @@
   (if (find-file (ido-completing-read "Find recent file: " recentf-list))
       (message "Opening file...")
     (message "Aborting")))
-(defun use-flx-recentf-smex()
+(unless use-helm
   (require 'flx-ido)
   (ido-mode 1)
   (ido-everywhere 1)
@@ -310,11 +301,9 @@
   ;; This is your old M-x.
   (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 )
-(message "before helm")
-(anarcatdisplay-timing)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; helm
-(defun use-helm()
+(when use-helm
   (use-package helm
     :defer 0.1
     :init
@@ -331,12 +320,6 @@
 					;  (helm-mode 1)  ;;;; <-- donot turn on helm mode everywhere, in ESHELL, helm will mess up the auto-completion
    
     ))
-
-;;(use-flx-recentf-smex)
-(use-helm)
-
-(message "after helm")
-(anarcatdisplay-timing)
 
 
 ;; (setq elfeed-feeds
@@ -370,6 +353,7 @@
 (global-set-key (kbd "S-<mouse-1>")  'xah-open-file-at-cursor)
 
 (global-set-key (kbd "C-/") 'comment-region)
+(global-set-key (kbd "C-\\") 'uncomment-region)
 (global-set-key (kbd "C-x r") 'find-file-read-only)
 
 (add-hook 'c++-mode-hook
@@ -468,8 +452,6 @@
   
 
 ;;(custom-set-variables '(sr-speedbar-right-side nil) '(sr-speedbar-skip-other-window-p t) '(sr-speedbar-max-width 20) '(sr-speedbar-width-x 10))
-(message "before custom set var")
-(anarcatdisplay-timing)
 
 (use-package shell-pop
   :init
@@ -535,8 +517,6 @@
   :defer)
 ;;(add-hook 'c++-mode-hook #'yas-minor-mode)
 
-(message "after yas-minor")
-(anarcatdisplay-timing)
 
 (use-package company
   :init
@@ -592,8 +572,6 @@
 (global-set-key (kbd "C-c <up>") 'flycheck-previous-error)
 (global-set-key (kbd "C-c <down>") 'flycheck-next-error)
 
-(message "after c++")
-(anarcatdisplay-timing)
 
 ;;;;;;;;;;;;;;;;;; dashboard
 (use-package dashboard
@@ -609,8 +587,7 @@
 
 ;(setq custom-file "~/.emacs.d/custom.el")
 ;(load custom-file)
-(message "after dashboard")
-(anarcatdisplay-timing)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; gdb  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq gdb-many-windows t)
@@ -654,11 +631,6 @@
    kept-new-versions 2
    kept-old-versions 1
    version-control t)       ; use versioned backups
-
-(message "before xah")
-(anarcatdisplay-timing)
-
-
 
 
 (defun xah-open-file-at-cursor ()
@@ -731,12 +703,6 @@ Version 2019-01-16"
               (find-file $path ))))))))
 
 
-
-
-
-(message "after xah")
-(anarcatdisplay-timing)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -781,11 +747,6 @@ Version 2019-01-16"
  '(isearch ((t (:inherit region :background "brightyellow" :foreground "#1B1E1C"))))
  '(lazy-highlight ((t (:inherit highlight :background "#FF99999")))))
 
-
-
-(message "after latex table")
-(anarcatdisplay-timing)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; tramp ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; (setq remote-file-name-inhibit-cache nil)
 ;; (setq vc-ignore-dir-regexp
@@ -825,10 +786,6 @@ Version 2019-01-16"
 		("M-/" . lsp-find-references))
 ))
 
-
-
-(message "end----")
-(anarcatdisplay-timing)
 
 (defun mouse-start-end (start end mode)
   "Return a list of region bounds based on START and END according to MODE.
