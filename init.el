@@ -3,6 +3,7 @@
 (setq use-lsp t)
 (setq use-helm t)
 
+(electric-pair-mode 1)
 ;; (defvar *emacs-load-start* (current-time))
 ;; (defun anarcat-time-to-ms (time)
 ;;   (+ (* (+ (* (car time) (expt 2 16)) (car (cdr time))) 1000000) (car (cdr (cdr time)))))
@@ -913,3 +914,33 @@ Argument E is the click event."
                   ;; surrounding sexp for a function call.
                   ((setq sym (function-at-point)) (describe-function sym)))))
 (define-key emacs-lisp-mode-map (kbd "S-<mouse-1>") 'describe-foo-at-point)
+
+(defun xah-make-backup ()
+  "Make a backup copy of current file or dired marked files.
+If in dired, backup current file or marked files.
+The backup file name is in this format
+ x.html~2018-05-15_133429~
+ The last part is hour, minutes, seconds.
+in the same dir. If such a file already exist, it's overwritten.
+If the current buffer is not associated with a file, nothing's done.
+
+URL `http://ergoemacs.org/emacs/elisp_make-backup.html'
+Version 2018-05-15"
+  (interactive)
+  (let (($fname (buffer-file-name))
+        ($date-time-format "%Y-%m-%d_%H%M%S"))
+    (if $fname
+        (let (($backup-name
+               (concat $fname "~" (format-time-string $date-time-format) "~")))
+          (copy-file $fname $backup-name t)
+          (message (concat "Backup saved at: " $backup-name)))
+      (if (string-equal major-mode "dired-mode")
+          (progn
+            (mapc (lambda ($x)
+                    (let (($backup-name
+                           (concat $x "~" (format-time-string $date-time-format) "~")))
+                      (copy-file $x $backup-name t)))
+                  (dired-get-marked-files))
+            (message "marked files backed up"))
+        (user-error "buffer not file nor dired")))))
+
