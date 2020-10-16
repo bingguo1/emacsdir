@@ -309,7 +309,8 @@
     :init
     (setq-default recent-save-file "~/.emacs.d/recentf")
     (recentf-mode 1)
-    (setq recentf-max-saved-items 200)
+    (setq recentf-max-saved-items 200
+	  helm-split-window-in-side-p t)  ;;;;; without this, when sr-speedbar is present, helm minibuffer will occupy the existing buffer 
     :bind (("M-x" . helm-M-x)
 	   ("C-x C-f" . helm-find-files)
 	   ("C-x C-r" .  helm-recentf))
@@ -443,7 +444,7 @@
 	speedbar-tag-hierarchy-method nil)  
   :config
   (speedbar-add-supported-extension ".txt")
-  :bind (("C-f" . sr-speedbar-refresh-toggle)
+  :bind (("C-f" . speedbar-refresh)  ;;; if editting your current buffer and want to reflect the change to the speedbar imenu tags, use this 
 	 ("C-1" . sb-toggle-expansion-curren-file)
 	 ("C-<tab>" . sr-speedbar-toggle)
 	 )
@@ -457,7 +458,7 @@
   :init
   (setq shell-pop-autocd-to-working-dir t
 	shell-pop-cleanup-buffer-at-process-exit t
-	shell-pop-full-span t
+;;	shell-pop-full-span t    ;;; do not use this, when sr-speedbar is present and shell-pop is showing, C-x 1 will not make shell-pop window occupy full
 	shell-pop-restore-window-configuration t
 	shell-pop-shell-type
 	'("ansi-term" "*ansi*"
@@ -747,6 +748,9 @@ Version 2019-01-16"
  '(isearch ((t (:inherit region :background "brightyellow" :foreground "#1B1E1C"))))
  '(lazy-highlight ((t (:inherit highlight :background "#FF99999")))))
 
+(set-face-attribute 'region nil :background "#ffffcc" :foreground "#000000") ;;; this affect when you select a region
+(require 'speedbar)
+(set-face-attribute 'speedbar-highlight-face nil :background "#ffbb99" :foreground "#000099")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; tramp ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; (setq remote-file-name-inhibit-cache nil)
 ;; (setq vc-ignore-dir-regexp
@@ -870,12 +874,14 @@ If MODE is 2 then do the same for lines."
 		 (forward-line 1)
 		 (point))))))
 
-
 (with-eval-after-load 'sr-speedbar
-  (advice-add 'sr-speedbar-open :after
-              #'(lambda ()
-                  ;; Remove weird sr-speedbar hooks
-                  (remove-hook 'speedbar-before-visiting-file-hook #'sr-speedbar-before-visiting-file-hook)
-                  (remove-hook 'speedbar-before-visiting-tag-hook #'sr-speedbar-before-visiting-tag-hook)
-                  (remove-hook 'speedbar-visiting-file-hook #'sr-speedbar-visiting-file-hook)
-                  (remove-hook 'speedbar-visiting-tag-hook #'sr-speedbar-visiting-tag-hook))))
+  ;;;;;;solve the problem: when use mouse to click tag/file in sr-speedbar, the cursor doesnot automatically go back to the working buffer
+  (defun speedbar-click (e)
+  "Activate any speedbar buttons where the mouse is clicked.
+This must be bound to a mouse event.  A button is any location of text
+with a mouse face that has a text property called `speedbar-function'.
+Argument E is the click event."
+  ;; Backward compatibility let statement.
+  (let ((speedbar-power-click dframe-power-click))
+    (speedbar-do-function-pointer)))  
+  )
