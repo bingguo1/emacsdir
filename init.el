@@ -441,7 +441,8 @@
 (use-package sr-speedbar
   :init
   (setq sr-speedbar-auto-refresh t
-	speedbar-tag-hierarchy-method nil)  
+	speedbar-tag-hierarchy-method '(speedbar-trim-words-tag-hierarchy)
+	sr-speedbar-default-width 35)
   :config
   (speedbar-add-supported-extension ".txt")
   :bind (("C-f" . speedbar-refresh)  ;;; if editting your current buffer and want to reflect the change to the speedbar imenu tags, use this 
@@ -499,7 +500,7 @@
 		  (stringp d)
 		  d
 		(car d)))))))
- '(speedbar-tag-hierarchy-method '(speedbar-trim-words-tag-hierarchy)))
+ )
 
 
 ;;;;;;;;;;; yas
