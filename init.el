@@ -3,6 +3,16 @@
 (setq use-lsp t)
 (setq use-helm t)
 
+;;;;;;;;;;;with macbook, i prefer CMD+c/v to copy/paste both in emacs
+;;;;;;;;;;;and system, but CMD+mouse also highlight, after use mouse
+;;;;;;;;;;;to select a region, CMD could be pressed before "mark set",
+;;;;;;;;;;;so highlight action will be used instead of copy
+(global-unset-key (kbd "<M-drag-mouse-1>"))   ; was mouse-set-secondary
+(global-unset-key (kbd "<M-down-mouse-1>"))   ; was mouse-drag-secondary
+(global-unset-key (kbd "<M-mouse-1>"))	  ; was mouse-start-secondary
+(global-unset-key (kbd "<M-mouse-2>"))	  ; was mouse-yank-secondary
+(global-unset-key (kbd "<M-mouse-3>"))	  ; was mouse-secondary-save-then-kill
+
 (electric-pair-mode 1)
 ;; (defvar *emacs-load-start* (current-time))
 ;; (defun anarcat-time-to-ms (time)
@@ -914,7 +924,7 @@ Argument E is the click event."
                   ;; surrounding sexp for a function call.
                   ((setq sym (function-at-point)) (describe-function sym)))))
 (define-key emacs-lisp-mode-map (kbd "S-<mouse-1>") 'describe-foo-at-point)
-
+(define-key lisp-interaction-mode-map (kbd "S-<mouse-1>") 'describe-foo-at-point)
 (defun xah-make-backup ()
   "Make a backup copy of current file or dired marked files.
 If in dired, backup current file or marked files.
