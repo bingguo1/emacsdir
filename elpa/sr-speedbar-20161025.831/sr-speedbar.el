@@ -426,6 +426,7 @@ of a speedbar-window.  It will be created if necessary."
           (speedbar-update-contents)
           (speedbar-set-timer 1)
           ;; Add speedbar hook.
+;;	  (beginning-of-buffer)
           (add-hook 'speedbar-before-visiting-file-hook 'sr-speedbar-before-visiting-file-hook t)
           (add-hook 'speedbar-before-visiting-tag-hook 'sr-speedbar-before-visiting-tag-hook t)
           (add-hook 'speedbar-visiting-file-hook 'sr-speedbar-visiting-file-hook t)
@@ -437,6 +438,8 @@ of a speedbar-window.  It will be created if necessary."
           (sr-speedbar-handle-auto-refresh sr-speedbar-auto-refresh))
         (set-window-buffer sr-speedbar-window (get-buffer sr-speedbar-buffer-name))
         (set-window-dedicated-p sr-speedbar-window t) ;make `sr-speedbar-window' dedicated to speedbar-buffer.
+					;	(beginning-of-line)
+	;;	(beginning-of-buffer)
         (select-window current-window))
     (message "`sr-speedbar' window has exist.")))
 
@@ -582,15 +585,16 @@ Otherwise return nil."
 	(progn
 	  (setq sr-speedbar-last-refresh-dictionary default-directory)
 	  (speedbar-refresh)
-	  (if (speedbar-find-selected-file sr-speedbar-last-buffer-filename)
-		(progn
-		  (speedbar-with-writable
-		    (put-text-property (match-beginning 1)
-				       (match-end 1)
-				       'face
-				       'speedbar-file-face))
-		  (speedbar-contract-line)	  
-		  ))
+	  (if sr-speedbar-last-buffer-filename
+	      (if (speedbar-find-selected-file sr-speedbar-last-buffer-filename)
+		  (progn
+		    (speedbar-with-writable
+		      (put-text-property (match-beginning 1)
+					 (match-end 1)
+					 'face
+					 'speedbar-file-face))
+		    (speedbar-contract-line)	  
+		    )))
 	  (if current-file
 	      (progn
 		(setq sr-speedbar-last-buffer-filename current-file)
@@ -601,11 +605,12 @@ Otherwise return nil."
 				     'face
 				     'speedbar-current-buffer-face))
 		(setq l1  (line-number-at-pos))
-		(if  (string-match (rx (or ".C" ".h" ".cxx" ".el")) current-file)
+		(if  (string-match (rx (or ".C" ".h" ".cxx" ".el" ".py")) current-file)
 		    (speedbar-expand-line))
-		(if (< l1 5)
+;		(print l1)
+		(if (< l1 20)
 		    (scroll-speedbar-buffer-up 0)
-		  (scroll-speedbar-buffer-up (- l1 4)))
+		  (scroll-speedbar-buffer-up (- l1 20)))
 		)
 	    (setq sr-speedbar-last-buffer-filename (buffer-name))))
       (if (and (not (equal sr-speedbar-last-buffer-filename current-file))
@@ -631,11 +636,11 @@ Otherwise return nil."
 				       'speedbar-current-buffer-face))
 		  (setq sr-speedbar-last-buffer-filename current-file)
 		  (setq l1  (line-number-at-pos))
-		  (if  (string-match (rx (or ".C" ".h" ".cxx" ".el")) current-file)
+		  (if  (string-match (rx (or ".C" ".h" ".cxx" ".el" ".py")) current-file)
 		      (speedbar-expand-line))
-		  (if (< l1 5)
+		  (if (< l1 20)
 		      (scroll-speedbar-buffer-up 0)
-		    (scroll-speedbar-buffer-up (- l1 4)))
+		    (scroll-speedbar-buffer-up (- l1 20)))
 		  )
 	      (setq sr-speedbar-last-buffer-filename (buffer-name))))))
   
