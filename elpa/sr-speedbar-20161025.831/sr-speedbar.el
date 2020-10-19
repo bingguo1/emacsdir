@@ -562,6 +562,18 @@ Otherwise return nil."
     )
 )
 
+(defface speedbar-current-buffer-face '((((class color) (background light))
+					 :background "#ffff99"
+					 :foreground "#9933ff"
+					 :underline t)
+					(((class color) (background dark))
+					 :background "#ffff99"
+					 :foreground "#9933ff"
+					 :underline t)
+					(t :underline t))
+  "Speedbar face for the file in the active window."
+  :group 'speedbar-faces)
+
 (defun sr-speedbar-refresh ()
   "Refresh the context of speedbar."
   (let ((l1 0) l2 (current-file (if (buffer-file-name) (buffer-file-name))))
@@ -578,7 +590,7 @@ Otherwise return nil."
 		  (put-text-property (match-beginning 1)
 				     (match-end 1)
 				     'face
-				     'speedbar-selected-face))
+				     'speedbar-current-buffer-face))
 		(setq l1  (line-number-at-pos))
 		(if  (string-match (rx (or ".C" ".h" ".cxx" ".el")) current-file)
 		    (speedbar-expand-line))
@@ -607,7 +619,7 @@ Otherwise return nil."
 		    (put-text-property (match-beginning 1)
 				       (match-end 1)
 				       'face
-				       'speedbar-selected-face))
+				       'speedbar-current-buffer-face))
 		  (setq sr-speedbar-last-buffer-filename current-file)
 		  (setq l1  (line-number-at-pos))
 		  (if  (string-match (rx (or ".C" ".h" ".cxx" ".el")) current-file)
