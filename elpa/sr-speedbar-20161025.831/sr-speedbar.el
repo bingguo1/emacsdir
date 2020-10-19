@@ -279,7 +279,7 @@
   "Same frame speedbar."
   :group 'speedbar)
 
-(defcustom sr-speedbar-default-width 30
+(defcustom sr-speedbar-default-width 35
   "Initial width of `sr-speedbar-window' under window system."
   :type 'integer
   :group 'sr-speedbar)
@@ -552,36 +552,74 @@ Otherwise return nil."
     (remove-hook 'speedbar-visiting-file-hook 'sr-speedbar-visiting-file-hook)
     (remove-hook 'speedbar-visiting-tag-hook 'sr-speedbar-visiting-tag-hook)))
 
+
+(defun scroll-speedbar-buffer-up(num)
+  (save-selected-window
+     (select-window (get-buffer-window speedbar-buffer t))     
+     (set-buffer speedbar-buffer)
+     (goto-char (point-min))
+     (scroll-up num)
+    )
+)
+
 (defun sr-speedbar-refresh ()
   "Refresh the context of speedbar."
-;;  (message "going to refresh")
-  (if (buffer-file-name)
-      (setq current-file (buffer-file-name))) ;;;< --- this line need to be here
-  (if (and (not (equal default-directory sr-speedbar-last-refresh-dictionary)) ;if directory is change
+  (let ((l1 0) l2 (current-file (if (buffer-file-name) (buffer-file-name))))
+    (if (and (not (equal default-directory sr-speedbar-last-refresh-dictionary)) ;if directory is change
              (not (sr-speedbar-window-p))) ;and is not in speedbar buffer
-      (progn
-	;;	(message "diectory changed")
-	(setq sr-speedbar-last-refresh-dictionary default-directory)
-	(setq sr-speedbar-last-buffer-filename current-file)
-	(speedbar-refresh)
-	
-	;;    (switch-to-buffer-other-frame " *SPEEDBAR*")
-	(if current-file
-	    (if  (string-match (rx (or ".C" ".h" ".cxx" ".el")) current-file)
-		(progn 
-		  (speedbar-find-selected-file current-file)
-		  (speedbar-expand-line)))))
-    (if (and (not (equal sr-speedbar-last-buffer-filename current-file))
-	     (string-match (rx (or ".C" ".h" ".cxx" ".el")) current-file))
 	(progn
-;;	  (message "buffer changed to ch file in same directory")
-	  (message current-file)
-          (speedbar-find-selected-file sr-speedbar-last-buffer-filename)
-	  (speedbar-contract-line)
-	  (speedbar-find-selected-file current-file)
-          (speedbar-expand-line)	  
-          (setq sr-speedbar-last-buffer-filename current-file)))
-    ))
+	  (setq sr-speedbar-last-refresh-dictionary default-directory)
+	  (speedbar-refresh)
+	  (if current-file
+	      (progn
+		(setq sr-speedbar-last-buffer-filename current-file)
+		(speedbar-with-writable
+		  (speedbar-find-selected-file current-file)
+		  (put-text-property (match-beginning 1)
+				     (match-end 1)
+				     'face
+				     'speedbar-selected-face))
+		(setq l1  (line-number-at-pos))
+		(if  (string-match (rx (or ".C" ".h" ".cxx" ".el")) current-file)
+		    (speedbar-expand-line))
+		(if (< l1 5)
+		    (scroll-speedbar-buffer-up 0)
+		  (scroll-speedbar-buffer-up (- l1 4)))
+		)
+	    (setq sr-speedbar-last-buffer-filename (buffer-name))))
+      (if (and (not (equal sr-speedbar-last-buffer-filename current-file))
+	       (not (sr-speedbar-window-p))
+	       current-file)
+	  (progn
+	    (if (speedbar-find-selected-file sr-speedbar-last-buffer-filename)
+		(progn
+		  (speedbar-with-writable
+		    (put-text-property (match-beginning 1)
+				       (match-end 1)
+				       'face
+				       'speedbar-file-face))
+		  (speedbar-contract-line)	  
+		  ))
+	    (if current-file
+		(progn
+		  (speedbar-with-writable
+		    (speedbar-find-selected-file current-file)
+		    (put-text-property (match-beginning 1)
+				       (match-end 1)
+				       'face
+				       'speedbar-selected-face))
+		  (setq sr-speedbar-last-buffer-filename current-file)
+		  (setq l1  (line-number-at-pos))
+		  (if  (string-match (rx (or ".C" ".h" ".cxx" ".el")) current-file)
+		      (speedbar-expand-line))
+		  (if (< l1 5)
+		      (scroll-speedbar-buffer-up 0)
+		    (scroll-speedbar-buffer-up (- l1 4)))
+		  )
+	      (setq sr-speedbar-last-buffer-filename (buffer-name))))))
+  
+    )
+  )
   
 (defun sr-speedbar-handle-auto-refresh (activate &optional echo-show)
   "Automatically refresh speedbar content when changed directory.
