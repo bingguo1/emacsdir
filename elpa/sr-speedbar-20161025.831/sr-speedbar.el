@@ -582,6 +582,15 @@ Otherwise return nil."
 	(progn
 	  (setq sr-speedbar-last-refresh-dictionary default-directory)
 	  (speedbar-refresh)
+	  (if (speedbar-find-selected-file sr-speedbar-last-buffer-filename)
+		(progn
+		  (speedbar-with-writable
+		    (put-text-property (match-beginning 1)
+				       (match-end 1)
+				       'face
+				       'speedbar-file-face))
+		  (speedbar-contract-line)	  
+		  ))
 	  (if current-file
 	      (progn
 		(setq sr-speedbar-last-buffer-filename current-file)
