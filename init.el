@@ -3,6 +3,7 @@
 (setq use-lsp t)
 (setq use-helm t)
 
+
 ;;;;;;;;;;;with macbook, i prefer CMD+c/v to copy/paste both in emacs
 ;;;;;;;;;;;and system, but CMD+mouse also highlight, after use mouse
 ;;;;;;;;;;;to select a region, CMD could be pressed before "mark set",
@@ -343,6 +344,12 @@
 ;; 	"http://news.ifeng.com/rss/index.xml"
 ;; 	))
 
+(global-unset-key (kbd "C-x b"))
+(global-set-key (kbd "C-x b s") 'bookmark-set)
+(global-set-key (kbd "C-x b l") 'list-bookmarks)
+(global-set-key (kbd "C-x b j") 'bookmark-jump)
+
+
 
 
 (global-set-key (kbd "s-x") 'kill-region)
@@ -497,7 +504,7 @@
  '(org-download-image-org-width 300)
  '(org-download-screenshot-method "screencapture -i %s")
  '(package-selected-packages
-   '(ace-jump-mode dap-mode use-package esup company-irony-c-headers treemacs lsp-mode irony-eldoc clipetty pdf-tools latex-math-preview org-download cdlatex shell-pop multiple-cursors exec-path-from-shell which-key smartparens yasnippet-snippets flycheck-irony ggtags company-irony irony yasnippet rtags cmake-ide company tabbar sr-speedbar spacemacs-theme simpleclip sane-term powerline panda-theme origami neotree minimap markdown-preview-eww markdown-mode+ latex-preview-pane helm flycheck flx-ido elfeed edit-indirect dracula-theme dashboard ctags-update counsel blackboard-theme auto-complete auctex))
+   '(projectile ace-jump-mode dap-mode use-package esup company-irony-c-headers treemacs lsp-mode irony-eldoc clipetty pdf-tools latex-math-preview org-download cdlatex shell-pop multiple-cursors exec-path-from-shell which-key smartparens yasnippet-snippets flycheck-irony ggtags company-irony irony yasnippet rtags cmake-ide company tabbar sr-speedbar spacemacs-theme simpleclip sane-term powerline panda-theme origami neotree minimap markdown-preview-eww markdown-mode+ latex-preview-pane helm flycheck flx-ido elfeed edit-indirect dracula-theme dashboard ctags-update counsel blackboard-theme auto-complete auctex))
  '(safe-local-variable-values
    '((eval setq cmake-ide-build-dir my-project-path)
      (eval setq cmake-ide-project-dir my-project-path)
@@ -590,6 +597,7 @@
 (use-package dashboard
   :init
   (setq dashboard-items '((recents  . 20)
+			  (projects . 5)
                      (bookmarks . 5)
                      (agenda . 5)
                      (registers . 5)))
@@ -772,7 +780,7 @@ Version 2019-01-16"
 ;; (setq tramp-verbose 1)
 (when window-system
   (set-face-attribute 'default nil :font "Monaco-10" )
-  (load-file "latex.el")
+  (load-file "~/.emacs.d/latex.el")
   (define-key input-decode-map "\C-i" [C-i])) ;;;; unbound C-i from tab key ;;;; this is okay for window emacs, but iterm emacs will fail to use tab key
 
 (use-package which-key
@@ -954,3 +962,8 @@ Version 2018-05-15"
             (message "marked files backed up"))
         (user-error "buffer not file nor dired")))))
 
+
+
+(projectile-mode +1)
+;;(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
