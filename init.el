@@ -434,6 +434,7 @@
     (define-key map "\e[1;9C" (kbd "M-<right>"))
     (define-key map "\e[1;9D" (kbd "M-<left>"))
     (define-key map "\e[1;C/" (kbd "C-/"))
+    (define-key map "\e[1;C`" (kbd "C-`"))
     ))
 
 
@@ -456,7 +457,7 @@
 	sr-speedbar-default-width 35)
   :config
   (speedbar-add-supported-extension ".txt")
-  :bind (("C-f" . speedbar-refresh)  ;;; if editting your current buffer and want to reflect the change to the speedbar imenu tags, use this 
+  :bind (("C-`" . speedbar-refresh)  ;;; if editting your current buffer and want to reflect the change to the speedbar imenu tags, use this 
 	 ("C-1" . sb-toggle-expansion-curren-file)
 	 ("C-<tab>" . sr-speedbar-toggle)
 	 )
@@ -496,7 +497,7 @@
  '(org-download-image-org-width 300)
  '(org-download-screenshot-method "screencapture -i %s")
  '(package-selected-packages
-   '(dap-mode use-package esup company-irony-c-headers treemacs lsp-mode irony-eldoc clipetty pdf-tools latex-math-preview org-download cdlatex shell-pop multiple-cursors exec-path-from-shell which-key smartparens yasnippet-snippets flycheck-irony ggtags company-irony irony yasnippet rtags cmake-ide company tabbar sr-speedbar spacemacs-theme simpleclip sane-term powerline panda-theme origami neotree minimap markdown-preview-eww markdown-mode+ latex-preview-pane helm flycheck flx-ido elfeed edit-indirect dracula-theme dashboard ctags-update counsel blackboard-theme auto-complete auctex))
+   '(ace-jump-mode dap-mode use-package esup company-irony-c-headers treemacs lsp-mode irony-eldoc clipetty pdf-tools latex-math-preview org-download cdlatex shell-pop multiple-cursors exec-path-from-shell which-key smartparens yasnippet-snippets flycheck-irony ggtags company-irony irony yasnippet rtags cmake-ide company tabbar sr-speedbar spacemacs-theme simpleclip sane-term powerline panda-theme origami neotree minimap markdown-preview-eww markdown-mode+ latex-preview-pane helm flycheck flx-ido elfeed edit-indirect dracula-theme dashboard ctags-update counsel blackboard-theme auto-complete auctex))
  '(safe-local-variable-values
    '((eval setq cmake-ide-build-dir my-project-path)
      (eval setq cmake-ide-project-dir my-project-path)
@@ -510,8 +511,7 @@
 	      (if
 		  (stringp d)
 		  d
-		(car d)))))))
- )
+		(car d))))))))
 
 
 ;;;;;;;;;;; yas
