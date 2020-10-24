@@ -174,12 +174,14 @@
      "user"))))
 
 
-(use-package awesome-tab
-  :init
-  (setq awesome-tab-buffer-groups-function 'my-tabbar-buffer-groups)
-  (when window-system
+(require 'awesome-tab)
+(awesome-tab-mode t)
+(setq awesome-tab-buffer-groups-function 'my-tabbar-buffer-groups)
+(when window-system
     (setq awesome-tab-active-bar-height 9
 	  awesome-tab-height 100))
+
+(use-package awesome-tab
    :bind (("C-<left>" . awesome-tab-backward-tab)
 	 ("C-<right>" . awesome-tab-forward-tab)
 	 ( "C-<down>" . awesome-tab-forward-group)
@@ -187,8 +189,6 @@
 	 ("C-q" . kill-this-buffer)
 	 ("C-S-<left>" . awesome-tab-move-current-tab-to-left)
 	 ("C-S-<right>" . awesome-tab-move-current-tab-to-right))
-   :config
-   (awesome-tab-mode t)
   )
 
 ;;(global-set-key [triple-wheel-left] 'awesome-tab-backward-tab)  ;;; in macbook pro, two fingers left/ right is this, too fast, not going to use
@@ -964,6 +964,6 @@ Version 2018-05-15"
 
 
 
-(projectile-mode +1)
+;(projectile-mode +1)
 ;;(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
-(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+;(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
