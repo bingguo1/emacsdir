@@ -1,4 +1,0 @@
-a=200/100
-add from macbook local
-
-add from dunegpvm
