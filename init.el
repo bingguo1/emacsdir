@@ -469,9 +469,7 @@
 	 ("C-<tab>" . sr-speedbar-toggle)
 	 )
 
-  )
-  
-
+  )  
 ;;(custom-set-variables '(sr-speedbar-right-side nil) '(sr-speedbar-skip-other-window-p t) '(sr-speedbar-max-width 20) '(sr-speedbar-width-x 10))
 
 (use-package shell-pop
