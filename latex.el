@@ -94,4 +94,9 @@
       (setq next-line (point))
       )))
 
+;; (load-file "~/.emacs.d/pdf-continuous-scroll-mode.el")
+;; (with-eval-after-load 'pdf-view
+;;   (require 'pdf-continuous-scroll-mode))
+;; (add-hook 'pdf-view-mode-hook 'pdf-continuous-scroll-mode)
+
 
