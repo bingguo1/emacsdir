@@ -1,0 +1,258 @@
+
+
+
+HISTIGNORE='ls*:exit:pwd:clear:cd*:man*:more*:less*:head*:tail*:nano*:open*:help*:history*:make:jobs:fg:rm*' 
+#HISTIGNORE="?? " ### ignores any 2 letter command. 
+# Avoid duplicates
+HISTCONTROL=ignoredups:erasedups
+# When the shell exits, append to the history file instead of overwriting it
+shopt -s histappend
+# After each command, append to the history file and reread it
+PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r"
+##### pkg_config_path is for pdf-tools in emacs
+export PKG_CONFIG_PATH=/usr/local/Cellar/zlib/1.2.11/lib/pkgconfig:/usr/local/lib/pkgconfig:/opt/X11/lib/pkgconfig
+
+
+alias ctags="/usr/local/bin/ctags"
+export TERM='xterm-256color'
+export HISTSIZE=5000
+#source /Users/bing/physicswork/genie/lamp/environment_setup.sh # for GENIE
+alias simac="ssh bingguo@172.21.141.232"
+export PYTHONPATH=$PYTHONPATH:$ROOTSYS/lib  # for pyroot
+
+export PATH=$PATH:/Users/bing/Library/Python/2.7/bin:/usr/local/opt/llvm/bin
+export PATH=~/physicswork/edepsim2_install/bin:$PATH
+export PATH=/Library/TeX/texbin:$PATH
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/Users/bing/physicswork/edepsim2_install/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/Users/bing/physicswork/gdml/boost_1_73_0_install/lib
+
+
+#export PATH=~/physicswork/edep_install_modify/bin:$PATH
+compresspdf() {
+    gs -sDEVICE=pdfwrite -dNOPAUSE -dQUIET -dBATCH -dPDFSETTINGS=/${3:-"screen"} -dCompatibilityLevel=1.4 -sOutputFile="$2" "$1"
+}
+
+source /Users/bing/physicswork/geant4_install/bin/geant4.sh
+#export LD_LIBRARY_PATH="/Users/bingguo/geant4/vgm_install/lib:/Users/bingguo/geant4/geant4_vmc_install/lib:/Users/bingguo/geant4/geaut4_install/lib:$LD_LIBRARY_PATH"
+#export LIBPATH="/Users/bingguo/geant4/vgm_install/lib:/Users/bingguo/geant4/geant4_vmc_install/lib:/Users/bingguo/geant4/geaut4_install/lib:$LIBPATH"
+#export LIBRARY_PATH="/Users/bingguo/geant4/vgm_install/lib:/Users/bingguo/geant4/geant4_vmc_install/lib:/Users/bingguo/geant4/geaut4_install/lib:$LIBRARY_PATH"
+function clean_daqssh {
+    #!/bin/bash
+    echo "Closing NOvA tunnels..." 
+    pkill -f 'ssh -L 5981:localhost:5951 -N -f -l novacr01 novadaq-far-master-02.fnal.gov'
+    pkill -f 'ssh -L 5982:localhost:5952 -N -f -l novacr02 novadaq-far-master-02.fnal.gov'
+    pkill -f 'ssh -L 5983:localhost:5953 -N -f -l novacr03 novadaq-far-master-02.fnal.gov'
+
+    pkill -f 'ssh -L 5991:localhost:5951 -N -f -l novacr01 novadaq-near-master.fnal.gov'
+    pkill -f 'ssh -L 5992:localhost:5952 -N -f -l novacr02 novadaq-near-master.fnal.gov'
+    pkill -f 'ssh -L 5993:localhost:5953 -N -f -l novacr03 novadaq-near-master.fnal.gov'
+
+    pkill -f 'ssh -L 5973:localhost:5953 -N -f -l novacr03 nova-cr-03.fnal.gov'
+    echo "Done." 
+
+}
+
+function daqssh {
+
+    #!/bin/bash
+    echo "Opening NOvA tunnels..." 
+    ssh -L 5981:localhost:5951 -N -f -l novacr01 novadaq-far-master-02.fnal.gov
+    ssh -L 5982:localhost:5952 -N -f -l novacr02 novadaq-far-master-02.fnal.gov
+    ssh -L 5983:localhost:5953 -N -f -l novacr03 novadaq-far-master-02.fnal.gov
+
+    ssh -L 5991:localhost:5951 -N -f -l novacr01 novadaq-near-master.fnal.gov
+    ssh -L 5992:localhost:5952 -N -f -l novacr02 novadaq-near-master.fnal.gov
+    ssh -L 5993:localhost:5953 -N -f -l novacr03 novadaq-near-master.fnal.gov
+
+    ssh -L 5973:localhost:5953 -N -f -l novacr03 nova-cr-03.fnal.gov
+    echo "Done."
+}
+
+# PYTHONPATH="${PYTHONPATH}:/Users/bingguo/mypythonpath/"
+# export PYTHONPATH
+alias mat="/Applications/MATLAB_R2019b.app/bin/matlab -nodesktop -nosplash"
+
+function setup_novaoffline_cvmfs {
+  echo -en "Enabling Nova Offline Environment (CVMFS Base Distro)\n" 
+################################################
+# This is the prefix to your site's cvmfs area.
+# Most sites will use /cvmfs as the base of the path followed by 
+# the specific repository that your code is stored in
+# (here it is nova.opensciencegrid.org) followed by the path to the actual software 
+# (here the nova code is under /nova/)
+  export CVMFS_DISTRO_BASE=/cvmfs/nova.opensciencegrid.org
+  export CVMFS_DISTRO_SLF=$CVMFS_DISTRO_BASE/novasoft/slf6/novasoft
+################################################
+# Next source the SRT setup files to make the art software available 
+  source $CVMFS_DISTRO_SLF/srt/srt.sh
+################################################
+# Then set the path for the external products
+  export EXTERNALS=$CVMFS_DISTRO_BASE/externals
+  export PRODUCTS=$CVMFS_DISTRO_BASE/externals
+################################################
+# Now source the actual NOvA srt setup to make everything available
+  source $CVMFS_DISTRO_SLF/setup/setup_nova.sh -e $PRODUCTS -6 $CVMFS_DISTRO_SLF "$@" 
+################################################
+# Finally change to your personal test release and set it as the
+# current test release (this step is optional)
+  pushd ~/NOvATestRel
+  srt_setup -a
+################################################
+# We are done!
+  echo -en "SRT Test Release set to: $PWD" 
+}
+
+editor=emacs-26.1
+#source /usr/local/bin/virtualenvwrapper.sh
+export NIMBUS_HOME=/Users/bingguo/nimbus/installhere/
+export CVSEDITOR="emacs -nw"
+export CVS_RSH="ssh"
+export EXTERNALS=/Users/bing/novalocal/externals
+
+alias cnaf="ssh guob@bastion.cnaf.infn.it"
+function oldhome(){
+    cd /Volumes/apple_19May17/Users/bing
+}
+
+function cpgonzo(){
+    scp -P 45122 bing@gonzo.physics.sc.edu:$1  $2
+}
+
+function cpnova(){
+
+    scp mylab@novagpvm09.fnal.gov:$1 $2
+}
+
+
+function cpdune(){
+    scp mylab@dunegpvm10.fnal.gov:$1  $2
+    
+}
+
+function italycpgonzo(){
+    scp -P 45122 $1 bing@gonzo.physics.sc.edu:/net/www/bing/graphs/meetingslides/ND_italy/
+}
+function sandcpgonzo(){
+    scp -P 45122 $1 bing@gonzo.physics.sc.edu:/net/www/bing/graphs/meetingslides/SAND/
+}
+
+function tree {
+find ${1:-.} -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'
+}
+
+
+#source /Users/bing/physicswork/rootv6.18.04/bin/thisroot.sh
+source /Users/bing/physicswork/root_source/root_install/bin/thisroot.sh
+
+alias paw="pawX11"
+export PS1="\[\033[36m\]\u\[\033[m\]@\[\033[32m\]\h:\[\033[33;1m\]\w\[\033[m\]\$ "
+export CLICOLOR=1
+export LSCOLORS=ExFxBxDxCxegedabagacad
+#alias ls="ls --color"
+alias ls='ls -Gh' 
+alias groot="g++ `root-config --cflags --libs` "
+
+alias gonzo="ssh -Y -p45122 bing@gonzo.physics.sc.edu"
+
+#export PAGER="col -b | open -a /Applications/Google\ Chrome.app -f"
+## the above line is for changing "MAN" pager to google chrome
+alias root="root -l"
+
+function sayhello(){
+    echo "hell"
+}
+
+#alias em="emacs-24.5 -nw"
+#alias emacs="emacs-24.5"
+#alias em="emacs -nw"
+alias em="/usr/local/opt/emacs-plus/bin/emacs-27.1 -nw"
+
+alias knova="kinit mylab@FNAL.GOV"
+alias snova="ssh -X mylab@novagpvm05.fnal.gov"
+
+alias s1="ssh -X mylab@novagpvm01.fnal.gov"
+alias s2="ssh -X mylab@novagpvm02.fnal.gov"
+alias s3="ssh -X mylab@novagpvm03.fnal.gov"
+alias s4="ssh -X mylab@novagpvm04.fnal.gov"
+alias s5="ssh -X mylab@novagpvm05.fnal.gov"
+alias s6="ssh -X mylab@novagpvm06.fnal.gov"
+alias s7="ssh -X mylab@novagpvm07.fnal.gov"
+alias s8="ssh -X mylab@novagpvm08.fnal.gov"
+alias s9="ssh -X mylab@novagpvm09.fnal.gov"
+alias s10="ssh -X mylab@novagpvm10.fnal.gov"
+
+
+
+alias d1="ssh -Y mylab@dunegpvm01.fnal.gov"
+alias d2="ssh -Y mylab@dunegpvm02.fnal.gov"
+alias d3="ssh -Y mylab@dunegpvm03.fnal.gov"
+alias d4="ssh -Y mylab@dunegpvm04.fnal.gov"
+alias d5="ssh -Y mylab@dunegpvm05.fnal.gov"
+alias d6="ssh -Y mylab@dunegpvm06.fnal.gov"
+alias d7="ssh -Y mylab@dunegpvm07.fnal.gov"
+alias d8="ssh -Y mylab@dunegpvm08.fnal.gov"
+alias d9="ssh -Y mylab@dunegpvm09.fnal.gov"
+alias d10="ssh -Y mylab@dunegpvm10.fnal.gov"
+
+sfast(){
+    echo 1: `s1 uptime`
+    echo 2: `s2 uptime`
+    echo 3: `s3 uptime`
+    echo 4: `s4 uptime`
+    echo 5: `s5 uptime`
+    echo 6: `s6 uptime`
+    echo 7: `s7 uptime`
+    echo 8: `s8 uptime`
+    echo 9: `s9 uptime`
+    echo 10: `s10 uptime`
+
+}
+
+sfastold(){
+
+    echo 2: `s2 uptime | awk '{print $12}'`
+    echo 4: `s4 uptime | awk '{print $10}'`
+    echo 5: `s5 uptime | awk '{print $12}'`
+    echo 6: `s6 uptime | awk '{print $10}'`
+    echo 7: `s7 uptime | awk '{print $12}'`
+    echo 8: `s8 uptime | awk '{print $12}'`
+    echo 9: `s9 uptime | awk '{print $12}'`
+    echo 10: `s10 uptime | awk '{print $10}'`
+
+}
+
+dfast(){
+    echo 1: `d1 uptime`
+    echo 2: `d2 uptime`
+    echo 3: `d3 uptime`
+    echo 4: `d4 uptime`
+    echo 5: `d5 uptime`
+    echo 6: `d6 uptime`
+    echo 7: `d7 uptime`
+    echo 8: `d8 uptime`
+    echo 9: `d9 uptime`
+    echo 10: `d10 uptime`
+}
+
+##
+
+export PATH=/usr/local/bin:/usr/local/sbin:$PATH
+
+
+# unset PYTHONPATH
+#alias python="python3.6"
+#export PATH="/usr/local/opt/icu4c/bin:$PATH"
+#export PATH="/usr/local/opt/icu4c/sbin:$PATH"
+#export LDFLAGS="-L/usr/local/opt/icu4c/lib"
+#export CPPFLAGS="-I/usr/local/opt/icu4c/include"
+export PATH="/usr/local/opt/libiconv/bin:$PATH"
+export LDFLAGS="-L/usr/local/opt/libiconv/lib"
+export CPPFLAGS="-I/usr/local/opt/libiconv/include"
+
+
+export PATH="/usr/local/opt/qt/bin:$PATH"
+
+#export LDFLAGS="-L/usr/local/opt/qt/lib"
+#export CPPFLAGS="-I/usr/local/opt/qt/include"
+
+
