@@ -433,6 +433,9 @@
             (define-key term-raw-map (kbd "M-b")     'term-send-Mleft)
 	    (define-key term-raw-map (kbd "<home>")    'my-term-send-home) 
 	    (define-key term-raw-map (kbd "<end>")    'my-term-send-end)
+	    (define-key term-raw-map (kbd "S-<left>")    'my-term-send-home) 
+	    (define-key term-raw-map (kbd "S-<right>")    'my-term-send-end)
+	    
     ))
 
 
