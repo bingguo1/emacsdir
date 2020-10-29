@@ -59,7 +59,6 @@
     (term-send-raw-string pasted-text)))
 
 
-(define-key isearch-mode-map (kbd "C-o") 'isearch-occur)
 
 (defun my-set-margins ()  ;;;; the purpose is to show flycheck error indicatioin on left margin, at least 3 to let it appear
   "Set margins in current buffer."
@@ -344,12 +343,13 @@
 ;; 	"http://news.ifeng.com/rss/index.xml"
 ;; 	))
 
+(define-key isearch-mode-map (kbd "C-o") 'isearch-occur)
+(global-set-key (kbd "C-o") 'occur)
+
 (global-unset-key (kbd "C-x b"))
 (global-set-key (kbd "C-x b s") 'bookmark-set)
 (global-set-key (kbd "C-x b l") 'list-bookmarks)
 (global-set-key (kbd "C-x b j") 'bookmark-jump)
-
-
 
 
 (global-set-key (kbd "s-x") 'kill-region)
@@ -802,8 +802,8 @@ Version 2019-01-16"
 	  )
 ;    :config    (require 'dap-gdb-lldb)
     :bind (:map lsp-mode-map
-		("M-<down-mouse-1>" . mouse-set-point)
-		("M-<mouse-1>" . lsp-find-definition-mouse)
+		("S-<down-mouse-1>" . mouse-set-point)
+		("S-<mouse-1>" . lsp-find-definition-mouse)
 		("M-." . lsp-find-definition)
 		("M-/" . lsp-find-references))
 ))
