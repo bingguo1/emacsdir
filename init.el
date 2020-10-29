@@ -15,6 +15,7 @@
 (global-unset-key (kbd "<M-mouse-3>"))	  ; was mouse-secondary-save-then-kill
 
 (electric-pair-mode 1)
+
 ;; (defvar *emacs-load-start* (current-time))
 ;; (defun anarcat-time-to-ms (time)
 ;;   (+ (* (+ (* (car time) (expt 2 16)) (car (cdr time))) 1000000) (car (cdr (cdr time)))))
@@ -141,6 +142,8 @@
 
  			 
 
+
+  
   (defun track-mouse (e)))
 
 
@@ -224,10 +227,10 @@
 ;;;;(setq explicit-shell-file-name "/bin/bash") ;;; <---- this doesn't help on "stop promping /bin/bash when open a term"
 (global-set-key (kbd "M-t") 'unique-term)
 
-(global-set-key (kbd "S-<left>") 'windmove-left)
-(global-set-key (kbd "S-<right>") 'windmove-right)
-(global-set-key (kbd "S-<up>") 'windmove-up)
-(global-set-key (kbd "S-<down>") 'windmove-down)
+(global-set-key (kbd "C-M-<left>") 'windmove-left)
+(global-set-key (kbd "C-M-<right>") 'windmove-right)
+(global-set-key (kbd "C-M-<up>") 'windmove-up)
+(global-set-key (kbd "C-M-<down>") 'windmove-down)
 (global-set-key (kbd "<end>") 'move-end-of-line)
 (global-set-key (kbd "<home>") 'move-beginning-of-line)
 
@@ -349,8 +352,10 @@
 (global-set-key (kbd "C-x b l") 'list-bookmarks)
 (global-set-key (kbd "C-x b j") 'bookmark-jump)
 
-
-
+(global-set-key (kbd "S-<up>") 'scroll-down-command)
+(global-set-key (kbd "S-<down>") 'scroll-up-command)
+(global-set-key (kbd "S-<left>") 'move-beginning-of-line)
+(global-set-key (kbd "S-<right>") 'move-end-of-line)
 
 (global-set-key (kbd "s-x") 'kill-region)
 (global-set-key (kbd "M-w") 'kill-region)
@@ -371,8 +376,8 @@
 (global-set-key (kbd "S-<down-mouse-1>")  'mouse-set-point)
 (global-set-key (kbd "S-<mouse-1>")  'xah-open-file-at-cursor)
 
-(global-set-key (kbd "C-/") 'comment-region)
-(global-set-key (kbd "C-\\") 'uncomment-region)
+(global-set-key (kbd "C-\\") 'comment-region)
+(global-set-key (kbd "C-M-\\") 'uncomment-region)
 (global-set-key (kbd "C-x r") 'find-file-read-only)
 
 (add-hook 'c++-mode-hook
@@ -429,22 +434,21 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(progn
-  (let ((map (if (boundp 'input-decode-map)
-                 input-decode-map
-               function-key-map)))
-    (define-key map "\e[1;C1"  (kbd "C-1"))
-    (define-key map "\e[1;CT"  (kbd "C-<tab>"))
-    (define-key map "\e[1;SU"  (kbd "s-u"))
-    (define-key map "\e[1;SC"  (kbd "s-c"))
-    (define-key map "\e[1;SX"  (kbd "s-x"))
-    (define-key map "\e[1;9C" (kbd "M-<right>"))
-    (define-key map "\e[1;9D" (kbd "M-<left>"))
-    (define-key map "\e[1;C/" (kbd "C-/"))
-    (define-key map "\e[1;C`" (kbd "C-`"))
-    ))
-
-
+(if (eq system-type 'darwin)
+    (progn
+      (let ((map (if (boundp 'input-decode-map)
+                     input-decode-map
+		   function-key-map)))
+	(define-key map "\e[1;C1"  (kbd "C-1"))
+	(define-key map "\e[1;CT"  (kbd "C-<tab>"))
+	(define-key map "\e[1;SU"  (kbd "s-u"))
+	(define-key map "\e[1;SC"  (kbd "s-c"))
+	(define-key map "\e[1;SX"  (kbd "s-x"))
+	(define-key map "\e[1;9C" (kbd "M-<right>"))
+	(define-key map "\e[1;9D" (kbd "M-<left>"))
+	(define-key map "\e[1;C/" (kbd "C-/"))
+	(define-key map "\e[1;C`" (kbd "C-`"))
+	)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; speedbar  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -464,9 +468,9 @@
 	sr-speedbar-default-width 35)
   :config
   (speedbar-add-supported-extension ".txt")
-  :bind (("C-`" . speedbar-refresh)  ;;; if editting your current buffer and want to reflect the change to the speedbar imenu tags, use this 
-	 ("C-1" . sb-toggle-expansion-curren-file)
-	 ("C-<tab>" . sr-speedbar-toggle)
+  :bind (("<f3>" . speedbar-refresh)  ;;; if editting your current buffer and want to reflect the change to the speedbar imenu tags, use this 
+	 ("<f2>" . sb-toggle-expansion-curren-file)
+	 ("<f1>" . sr-speedbar-toggle)
 	 )
 
   )  
