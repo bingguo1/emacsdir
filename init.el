@@ -431,6 +431,8 @@
 
 	    (define-key term-raw-map (kbd "M-f")    'term-send-Mright)  ;;;;; use M-<left/right>  does not work , i guess it's bound to M-f/b
             (define-key term-raw-map (kbd "M-b")     'term-send-Mleft)
+	    (define-key term-raw-map (kbd "M-<right>")    'term-send-Mright)
+	    (define-key term-raw-map (kbd "M-<left>")    'term-send-Mleft)
 	    (define-key term-raw-map (kbd "<home>")    'my-term-send-home) 
 	    (define-key term-raw-map (kbd "<end>")    'my-term-send-end)
 	    (define-key term-raw-map (kbd "S-<left>")    'my-term-send-home) 
