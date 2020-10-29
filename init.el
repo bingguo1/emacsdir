@@ -506,6 +506,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(awesome-tab-terminal-dark-select-foreground-color "#f2e6ff")
+ '(awesome-tab-terminal-dark-unselect-background-color "#999999")
+ '(awesome-tab-terminal-dark-unselect-foreground-color "#1a0033")
  '(flycheck-indication-mode 'left-margin)
  '(mouse-drag-and-drop-region 'modifier)
  '(mouse-drag-and-drop-region-cut-when-buffers-differ t)
