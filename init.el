@@ -441,7 +441,7 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(if (eq system-type 'darwin)
+;;(if (eq system-type 'darwin)
     (progn
       (let ((map (if (boundp 'input-decode-map)
                      input-decode-map
@@ -455,7 +455,8 @@
 	(define-key map "\e[1;9D" (kbd "M-<left>"))
 	(define-key map "\e[1;C/" (kbd "C-/"))
 	(define-key map "\e[1;C`" (kbd "C-`"))
-	)))
+	))
+;;)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; speedbar  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
