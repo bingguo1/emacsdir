@@ -478,7 +478,7 @@
 	sr-speedbar-default-width 35)
   :config
   (speedbar-add-supported-extension ".txt")
-  :bind (("<f3>" . speedbar-refresh)  ;;; if editting your current buffer and want to reflect the change to the speedbar imenu tags, use this 
+  :bind (("C-c s f" . speedbar-refresh)  ;;; if editting your current buffer and want to reflect the change to the speedbar imenu tags, use this 
 	 ("<f2>" . sb-toggle-expansion-curren-file)
 	 ("<f1>" . sr-speedbar-toggle)
 	 )
