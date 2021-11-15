@@ -135,7 +135,7 @@
 ;;(require 'init-vcs)
 (require 'init-flycheck)
 (require 'init-projectile)
-(require 'init-lsp)
+;;(require 'init-lsp)
 (require 'init-ctags)
 
 ;;(require 'init-prog)
