@@ -1,4 +1,10 @@
 
+(require 'recentf)
+(setq recentf-auto-cleanup 'never) ;; disable before we start recentf!
+(setq recentf-max-saved-items 200)
+(run-at-time nil (* 15 60) 'recentf-save-list)
+(recentf-mode 1)
+      
 (setq-default indent-tabs-mode nil)
 (setq use-lsp t)
 (setq use-helm t)
@@ -54,7 +60,7 @@
 ;;(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
 ;;(add-hook 'prog-mode-hook 'highlight-indentation-mode)
 ;;(setq highlight-indentation-blank-lines t)
-(run-at-time nil (* 15 60) 'recentf-save-list)
+
 ;; (defun pbpaste ()
 ;;   (interactive)
 ;;   (call-process-region (point) (if mark-active (mark) (point)) "pbpaste" t t))
@@ -208,6 +214,9 @@
 ;;(global-set-key [triple-wheel-right] 'awesome-tab-forward-tab)
 
 (require 'web-mode)
+(setq web-mode-enable-auto-pairing t)
+(setq web-mode-enable-css-colorization t)
+(setq web-mode-enable-block-face t)
 (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
@@ -284,32 +293,32 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; org ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(with-eval-after-load 'org
-  (require 'org-tempo) ;;;; enable the old way to create a block by < + key + <tab>
-  (global-set-key (kbd "C-c o l") 'org-store-link)
-  (global-set-key (kbd "C-c o a") 'org-agenda)
-  (global-set-key (kbd "C-c o c") 'org-capture)
-  (setq org-image-actual-width nil)
+;; (with-eval-after-load 'org
+;;   (require 'org-tempo) ;;;; enable the old way to create a block by < + key + <tab>
+;;   (global-set-key (kbd "C-c o l") 'org-store-link)
+;;   (global-set-key (kbd "C-c o a") 'org-agenda)
+;;   (global-set-key (kbd "C-c o c") 'org-capture)
+;;   (setq org-image-actual-width nil)
   
-  (require 'org-download)
-  ;; Drag-and-drop to `dired`
-  (add-hook 'dired-mode-hook 'org-download-enable)
-  (with-eval-after-load 'org
-    (org-download-enable))
+;;   (require 'org-download)
+;;   ;; Drag-and-drop to `dired`
+;;   (add-hook 'dired-mode-hook 'org-download-enable)
+;;   (with-eval-after-load 'org
+;;     (org-download-enable))
   
-  (unless (string= (user-login-name) "mylab")
-    (setq org-default-notes-file "~/doc_emacs/orgs/tasks.org")
-    (setq org-agenda-files '("~/doc_emacs/orgs/agenda/"))
-    )
+;;   (unless (string= (user-login-name) "mylab")
+;;     (setq org-default-notes-file "~/doc_emacs/orgs/tasks.org")
+;;     (setq org-agenda-files '("~/doc_emacs/orgs/agenda/"))
+;;     )
   
-  (require 'ox-latex)
-  (add-to-list 'org-latex-classes
-               '("beamer"
-		 "\\documentclass\[presentation\]\{beamer\}"
-		 ("\\section\{%s\}" . "\\section*\{%s\}")
-		 ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
-		 ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
-  )
+;;   (require 'ox-latex)
+;;   (add-to-list 'org-latex-classes
+;;                '("beamer"
+;; 		 "\\documentclass\[presentation\]\{beamer\}"
+;; 		 ("\\section\{%s\}" . "\\section*\{%s\}")
+;; 		 ("\\subsection\{%s\}" . "\\subsection*\{%s\}")
+;; 		 ("\\subsubsection\{%s\}" . "\\subsubsection*\{%s\}")))
+;;   )
 
 ;;;;;;;;;;;;;;;  ;;;;;;;;;;;;; flx-ido  ;;;;;;;;;;;;;;;  smex  ;;;;;;;;;;;;;
 (defun ido-recentf-open ()
@@ -344,12 +353,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; helm
 (when use-helm
   (use-package helm
-    :defer 0.1
+    :defer t
     :init
-    (setq-default recent-save-file "~/.emacs.d/recentf")
-    (recentf-mode 1)
-    (setq recentf-max-saved-items 200
-	  helm-split-window-in-side-p t)  ;;;;; without this, when sr-speedbar is present, helm minibuffer will occupy the existing buffer 
+    ;;    (setq-default recent-save-file "~/.emacs.d/recentf")
+    (setq helm-split-window-in-side-p t)  ;;;;; without this, when sr-speedbar is present, helm minibuffer will occupy the existing buffer 
     :bind (("M-x" . helm-M-x)
 	   ("C-x C-f" . helm-find-files)
 	   ("C-x C-r" .  helm-recentf))
@@ -357,10 +364,8 @@
     (message "load helm now")
     (setq helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
     (require 'helm-config)   
-					;  (helm-mode 1)  ;;;; <-- donot turn on helm mode everywhere, in ESHELL, helm will mess up the auto-completion
-   
+					;  (helm-mode 1)  ;;;; <-- donot turn on helm mode everywhere, in ESHELL, helm will mess up the auto-completion   
     ))
-
 
 ;; (setq elfeed-feeds
 ;;       '("http://feeds.bbci.co.uk/news/world/rss.xml"
@@ -1004,7 +1009,6 @@ Version 2018-05-15"
                   (dired-get-marked-files))
             (message "marked files backed up"))
         (user-error "buffer not file nor dired")))))
-
 
 
 ;(projectile-mode +1)
