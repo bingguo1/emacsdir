@@ -1,9 +1,21 @@
 
-
+(setq-default indent-tabs-mode nil)
 (setq use-lsp t)
 (setq use-helm t)
 
+(add-hook 'mmm-mode-hook
+          (lambda ()
+	    ;;	    (setq tab-width 4)        ;; set your desired tab width
+	    (setq indent-tabs-mode nil) ;; use tabs for indentation
+	    ))
 
+(add-hook 'html-mode-hook
+	  (lambda ()
+	    (set (make-local-variable 'sgml-basic-offset) 4)
+	    ;;	    (setq tab-width 4)        ;; set your desired tab width
+	    ;;	    (setq indent-tabs-mode t) ;; use tabs for indentation
+	    ))
+	  
 ;;;;;;;;;;;with macbook, i prefer CMD+c/v to copy/paste both in emacs
 ;;;;;;;;;;;and system, but CMD+mouse also highlight, after use mouse
 ;;;;;;;;;;;to select a region, CMD could be pressed before "mark set",
@@ -175,7 +187,6 @@
     (t
      "user"))))
 
-
 (require 'awesome-tab)
 (awesome-tab-mode t)
 (setq awesome-tab-buffer-groups-function 'my-tabbar-buffer-groups)
@@ -195,6 +206,20 @@
 
 ;;(global-set-key [triple-wheel-left] 'awesome-tab-backward-tab)  ;;; in macbook pro, two fingers left/ right is this, too fast, not going to use
 ;;(global-set-key [triple-wheel-right] 'awesome-tab-forward-tab)
+
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+(setq web-mode-engines-alist
+      '(("php"    . "\\.phtml\\'")
+        ("blade"  . "\\.blade\\."))
+)
+
 
 
 (unless window-system (menu-bar-mode -1))
@@ -457,9 +482,12 @@
 	(define-key map "\e[1;9D" (kbd "M-<left>"))
 	(define-key map "\e[1;C/" (kbd "C-/"))
 	(define-key map "\e[1;C`" (kbd "C-`"))
+	(define-key map "\e[1;SB" (kbd "s-b"))
 	))
 ;;)
 
+
+(global-set-key (kbd "s-b") 'neotree-toggle)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; speedbar  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun sb-toggle-expansion-curren-file ()
@@ -519,21 +547,21 @@
  '(org-download-image-org-width 300)
  '(org-download-screenshot-method "screencapture -i %s")
  '(package-selected-packages
-   '(with-editor magit projectile ace-jump-mode dap-mode use-package esup company-irony-c-headers treemacs lsp-mode irony-eldoc clipetty pdf-tools latex-math-preview org-download cdlatex shell-pop multiple-cursors exec-path-from-shell which-key smartparens yasnippet-snippets flycheck-irony ggtags company-irony irony yasnippet rtags cmake-ide company tabbar sr-speedbar spacemacs-theme simpleclip sane-term powerline panda-theme origami neotree minimap markdown-preview-eww markdown-mode+ latex-preview-pane helm flycheck flx-ido elfeed edit-indirect dracula-theme dashboard ctags-update counsel blackboard-theme auto-complete auctex))
+   '(web-mode vue-mode php-mode with-editor magit projectile ace-jump-mode dap-mode use-package esup company-irony-c-headers treemacs lsp-mode irony-eldoc clipetty pdf-tools latex-math-preview org-download cdlatex shell-pop multiple-cursors exec-path-from-shell which-key smartparens yasnippet-snippets flycheck-irony ggtags company-irony irony yasnippet rtags cmake-ide company tabbar sr-speedbar spacemacs-theme simpleclip sane-term powerline panda-theme origami neotree minimap markdown-preview-eww markdown-mode+ latex-preview-pane helm flycheck flx-ido elfeed edit-indirect dracula-theme dashboard ctags-update counsel blackboard-theme auto-complete auctex))
  '(safe-local-variable-values
    '((eval setq cmake-ide-build-dir my-project-path)
      (eval setq cmake-ide-project-dir my-project-path)
      (eval message "Project directory set to `%s'." my-project-path)
      (eval set
-	   (make-local-variable 'my-project-path)
-	   (file-name-directory
-	    (let
-		((d
-		  (dir-locals-find-file "./")))
-	      (if
-		  (stringp d)
-		  d
-		(car d))))))))
+           (make-local-variable 'my-project-path)
+           (file-name-directory
+            (let
+                ((d
+                  (dir-locals-find-file "./")))
+              (if
+                  (stringp d)
+                  d
+                (car d))))))))
 
 
 ;;;;;;;;;;; yas
@@ -766,12 +794,12 @@ Version 2019-01-16"
 ;; (setq eshell-highlight-prompt nil)
 
 
-(use-package highlight-indent-guides
-  :init
-  (setq highlight-indent-guides-auto-character-face-perc 30
-	highlight-indent-guides-method 'character)
-  :hook (prog-mode . highlight-indent-guides-mode)
-  )
+;; (use-package highlight-indent-guides
+;;   :init
+;;   (setq highlight-indent-guides-auto-character-face-perc 30
+;; 	highlight-indent-guides-method 'character)
+;;   :hook (prog-mode . highlight-indent-guides-mode)
+;;   )
   
 
 (custom-set-faces
@@ -982,3 +1010,4 @@ Version 2018-05-15"
 ;(projectile-mode +1)
 ;;(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
 ;(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+

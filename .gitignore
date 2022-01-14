@@ -1,0 +1,13 @@
+.cache
+auto-save-list/
+.persistent-scratch
+.lsp*
+persistent-scratch/
+places
+tramp
+transient/
+var/
+recentf
+projectile-bookmarks.eld
+persp-confs/
+elpa/archives/
