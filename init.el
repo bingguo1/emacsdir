@@ -4,7 +4,12 @@
 (setq recentf-max-saved-items 200)
 (run-at-time nil (* 15 60) 'recentf-save-list)
 (recentf-mode 1)
-      
+
+
+(setq desktop-path '("~/.emacs.d/"))
+(desktop-save-mode 1)
+
+
 (setq-default indent-tabs-mode nil)
 (setq use-lsp t)
 (setq use-helm t)
