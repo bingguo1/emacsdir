@@ -98,7 +98,7 @@
 
 
 (add-hook 'prog-mode-hook 'linum-mode)
-
+(add-hook 'mmm-mode-hook 'linum-mode)
 
 
 ;; If you want to use latest version
@@ -263,7 +263,7 @@
 
 (setq shell-file-name "/bin/bash")
 ;;;;(setq explicit-shell-file-name "/bin/bash") ;;; <---- this doesn't help on "stop promping /bin/bash when open a term"
-(global-set-key (kbd "M-t") 'unique-term)
+(global-set-key (kbd "C-t") 'unique-term)
 
 (global-set-key (kbd "C-M-<left>") 'windmove-left)
 (global-set-key (kbd "C-M-<right>") 'windmove-right)
@@ -493,11 +493,19 @@
 	(define-key map "\e[1;C/" (kbd "C-/"))
 	(define-key map "\e[1;C`" (kbd "C-`"))
 	(define-key map "\e[1;SB" (kbd "s-b"))
+        (define-key map "\e[1;Sa"  (kbd "s-a"))
+        (define-key map "\e[1;S/"  (kbd "s-/"))
+        (define-key map "\e[1;Sz"  (kbd "s-z"))
 	))
 ;;)
 
 
 (global-set-key (kbd "s-b") 'neotree-toggle)
+(global-set-key (kbd "s-/") 'comment-dwim)
+(global-set-key (kbd "s-a") 'mark-whole-buffer)
+(global-set-key (kbd "s-z") 'undo)
+(global-set-key (kbd "M-f") 'indent-region)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; speedbar  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun sb-toggle-expansion-curren-file ()
@@ -535,7 +543,7 @@
 	  (lambda nil
 	    (ansi-term shell-pop-term-shell)))
 	shell-pop-term-shell "/bin/bash"
-	shell-pop-universal-key "C-a"
+	shell-pop-universal-key "C-`"
 	shell-pop-window-position "bottom")
   )
 
