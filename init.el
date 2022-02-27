@@ -1,4 +1,3 @@
-
 (require 'recentf)
 (setq recentf-auto-cleanup 'never) ;; disable before we start recentf!
 (setq recentf-max-saved-items 200)
