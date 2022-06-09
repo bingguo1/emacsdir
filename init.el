@@ -14,7 +14,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(cmake-ide lsp-mode shell-pop yasnippet helm web-mode awesome-tab use-package cmake-mode)))
+   '(ace-jump-mode desktop+ workgroups2 perspective cmake-ide lsp-mode shell-pop yasnippet helm web-mode awesome-tab use-package cmake-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -33,17 +33,29 @@
 
 (load-file "~/.emacs.d/init-yasnippet.el")
 (load-file "~/.emacs.d/init-shellpop.el")
+
+
 ;;(load-file "~/.emacs.d/init-mac.el")
+(load-file "~/.emacs.d/init-linux.el")
 
 (load-file "~/.emacs.d/init-company.el")
 ;;(load-file "~/.emacs.d/init-flycheck.el")
-(load-file "~/.emacs.d/init-dashboard.el")
+;;(load-file "~/.emacs.d/init-dashboard.el")
+;;(load-file "~/.emacs.d/init-projectile.el")
 
 (load-file "~/.emacs.d/init-xah.el")
 
 (load-file "~/.emacs.d/init-theme.el")
 
-(load-file  "~/.emacs.d/init-lsp.el")
+;;(load-file  "~/.emacs.d/init-lsp.el")
 
-(load-file "~/.emacs.d/init-mouse.el")
+;;(load-file "~/.emacs.d/init-mouse.el")
+(load-file "~/.emacs.d/init-acejump.el")
+
+
 (load-file "~/.emacs.d/init-org.el")
+(load-file "~/.emacs.d/init-desktop.el")
+;;(load-file "~/.emacs.d/init-perspective.el")
+;;(load-file "~/.emacs.d/init-workgroups2.el")
+
+

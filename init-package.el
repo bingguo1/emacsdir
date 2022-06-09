@@ -9,7 +9,7 @@
 
 
 
-;(package-refresh-contents)
+(package-refresh-contents)
 ;; add use package
 ;(package-install 'use-package)
 

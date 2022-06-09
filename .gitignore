@@ -1,3 +1,5 @@
+.emacs-buffers
+desktops/
 .emacs.desktop
 .emacs.desktop.lock
 .cache

@@ -1,3 +1,15 @@
+
+
+;;;;;;;;;;;;;;;;;; desktop + ;;;;;;;;;;;;;;;;;;;;;;;;
+(global-unset-key (kbd "C-d"))
+(global-set-key (kbd "C-d c") 'desktop+-create)
+(global-set-key (kbd "C-d l") 'desktop+-load)
+(global-set-key (kbd "C-d a") 'desktop-change-dir)
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (define-key isearch-mode-map (kbd "C-o") 'isearch-occur)
 (global-set-key (kbd "C-o") 'occur)
 
