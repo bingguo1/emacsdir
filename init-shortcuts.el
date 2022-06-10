@@ -1,5 +1,18 @@
 
 
+;;;;;;;;;;;;;;;;;;;;;;;; indent whole buffer ;;;;;;;;;;;;;;;;;;
+ ;; C-x h runs the command mark-whole-buffer
+ ;;    C-M-\ runs the command indent-region
+(defun indent-buffer ()
+  (interactive)
+  (save-excursion
+    (indent-region (point-min) (point-max) nil)))
+(global-set-key (kbd "C-]") 'indent-buffer)
+
+
+
+(global-set-key (kbd "C-_") 'comment-dwim)  ;; this is actually C-/ (no mapping at all)
+(global-set-key (kbd "C-z") 'undo)
 ;;;;;;;;;;;;;;;;;; desktop + ;;;;;;;;;;;;;;;;;;;;;;;;
 (global-unset-key (kbd "C-d"))
 (global-set-key (kbd "C-d c") 'desktop+-create)
