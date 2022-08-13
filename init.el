@@ -13,6 +13,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(awesome-tab-terminal-dark-select-foreground-color "#f2e6ff")
+ '(awesome-tab-terminal-dark-unselect-background-color "#999999")
+ '(awesome-tab-terminal-dark-unselect-foreground-color "#1a0033")
  '(package-selected-packages
    '(ace-jump-mode desktop+ workgroups2 perspective cmake-ide lsp-mode shell-pop yasnippet helm web-mode awesome-tab use-package cmake-mode)))
 (custom-set-faces

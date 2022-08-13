@@ -39,11 +39,11 @@
 
 (use-package awesome-tab
 
-  :bind (("C-S-<left>" . awesome-tab-backward-tab)
-	 ("C-S-<right>" . awesome-tab-forward-tab)
-	 ("C-S-<down>" . awesome-tab-forward-group)
-	 ("C-S-<up>" . awesome-tab-backward-group)
+  :bind (("C-<left>" . awesome-tab-backward-tab)
+	 ("C-<right>" . awesome-tab-forward-tab)
+	 ("C-<down>" . awesome-tab-forward-group)
+	 ("C-<up>" . awesome-tab-backward-group)
 	 ("C-q" . kill-this-buffer)
-	 ;;("C-S-<left>" . awesome-tab-move-current-tab-to-left)
-	 ;;("C-S-<right>" . awesome-tab-move-current-tab-to-right))
+	 ("C-S-<left>" . awesome-tab-move-current-tab-to-left)
+	 ("C-S-<right>" . awesome-tab-move-current-tab-to-right)
   ))
